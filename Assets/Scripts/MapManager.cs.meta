@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 265da354509c74a548cc4aca16356248
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - biomeATile: {fileID: 11400000, guid: 7d46702b4a95449f887403c9803d4f01, type: 2}
+  - biomeBTile: {instanceID: 0}
+  - biomeCTile: {instanceID: 0}
+  - tilemap: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
