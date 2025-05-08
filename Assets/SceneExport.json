@@ -1,0 +1,1385 @@
+{
+    "objects": [
+        {
+            "name": "building-type-f(Clone)",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "Houses",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 173.5,
+                    "y": 171.5,
+                    "z": 0.0
+                },
+                "localPosition": {
+                    "x": 147.44764709472657,
+                    "y": -21.051727294921876,
+                    "z": 1.6771138906478882
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "MeshFilter",
+                "MeshRenderer",
+                "SortingGroup"
+            ]
+        },
+        {
+            "name": "building-type-f(Clone)",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "Houses",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 43.5,
+                    "y": 161.5,
+                    "z": 0.0
+                },
+                "localPosition": {
+                    "x": 17.447641372680665,
+                    "y": -31.051727294921876,
+                    "z": 1.6771138906478882
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 90.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "MeshFilter",
+                "MeshRenderer",
+                "SortingGroup"
+            ]
+        },
+        {
+            "name": "building-type-f(Clone)",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "Houses",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 20.5,
+                    "y": 11.5,
+                    "z": 0.0
+                },
+                "localPosition": {
+                    "x": -5.552358627319336,
+                    "y": -181.05172729492188,
+                    "z": 1.6771138906478882
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "MeshFilter",
+                "MeshRenderer",
+                "SortingGroup"
+            ]
+        },
+        {
+            "name": "building-type-f(Clone)",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "Houses",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 127.5,
+                    "y": 70.5,
+                    "z": 0.0
+                },
+                "localPosition": {
+                    "x": 101.44763946533203,
+                    "y": -122.05172729492188,
+                    "z": 1.6771138906478882
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 90.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "MeshFilter",
+                "MeshRenderer",
+                "SortingGroup"
+            ]
+        },
+        {
+            "name": "building-type-f(Clone)",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "Houses",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 78.5,
+                    "y": 177.5,
+                    "z": 0.0
+                },
+                "localPosition": {
+                    "x": 52.44763946533203,
+                    "y": -15.051727294921875,
+                    "z": 1.6771138906478882
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 180.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "MeshFilter",
+                "MeshRenderer",
+                "SortingGroup"
+            ]
+        },
+        {
+            "name": "[Debug Updater]",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "None",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localPosition": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "DebugUpdater"
+            ]
+        },
+        {
+            "name": "Houses",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "None",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 26.052358627319337,
+                    "y": 192.55172729492188,
+                    "z": -1.6771138906478882
+                },
+                "localPosition": {
+                    "x": 26.052358627319337,
+                    "y": 192.55172729492188,
+                    "z": -1.6771138906478882
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform"
+            ]
+        },
+        {
+            "name": "Main Camera",
+            "tag": "MainCamera",
+            "layer": "Default",
+            "parent": "None",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": -0.699999988079071,
+                    "y": -0.10000000149011612,
+                    "z": -10.0
+                },
+                "localPosition": {
+                    "x": -0.699999988079071,
+                    "y": -0.10000000149011612,
+                    "z": -10.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "Camera",
+                "AudioListener",
+                "UniversalAdditionalCameraData"
+            ]
+        },
+        {
+            "name": "Global Light 2D",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "None",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": -5.230000019073486,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localPosition": {
+                    "x": -5.230000019073486,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "Light2D"
+            ]
+        },
+        {
+            "name": "WaterLayer",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "Grid",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localPosition": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "Tilemap",
+                "TilemapRenderer"
+            ]
+        },
+        {
+            "name": "HouseManager",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "None",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 54.95658493041992,
+                    "y": 12.57237434387207,
+                    "z": -0.04659999907016754
+                },
+                "localPosition": {
+                    "x": 54.95658493041992,
+                    "y": 12.57237434387207,
+                    "z": -0.04659999907016754
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "HousePlacer"
+            ]
+        },
+        {
+            "name": "PropsLayer",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "Grid",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localPosition": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "Tilemap",
+                "TilemapRenderer"
+            ]
+        },
+        {
+            "name": "BaseLayer",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "Grid",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localPosition": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "Tilemap",
+                "TilemapRenderer"
+            ]
+        },
+        {
+            "name": "Grid",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "None",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localPosition": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "Grid"
+            ]
+        },
+        {
+            "name": "MapManager",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "None",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 54.95658493041992,
+                    "y": 12.57237434387207,
+                    "z": -0.04659999907016754
+                },
+                "localPosition": {
+                    "x": 54.95658493041992,
+                    "y": 12.57237434387207,
+                    "z": -0.04659999907016754
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "ProceduralMapGenerator"
+            ]
+        },
+        {
+            "name": "RoadLayer",
+            "tag": "Untagged",
+            "layer": "Default",
+            "parent": "Grid",
+            "prefabType": "Scene Object",
+            "isActive": true,
+            "transform": {
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localPosition": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "localScale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "spriteRenderer": {
+                "sortingLayerName": "",
+                "sortingOrder": 0,
+                "spritePath": "",
+                "color": {
+                    "r": 0.0,
+                    "g": 0.0,
+                    "b": 0.0,
+                    "a": 0.0
+                },
+                "flipX": false,
+                "flipY": false
+            },
+            "components": [
+                "Transform",
+                "Tilemap",
+                "TilemapRenderer"
+            ]
+        }
+    ],
+    "prefabs": [
+        {
+            "name": "background",
+            "path": "Assets/2DPixelFantasyTilemapFree/TilePalettes/background.prefab",
+            "components": [
+                "Transform",
+                "Grid"
+            ]
+        },
+        {
+            "name": "particles 1",
+            "path": "Assets/particles 1.prefab",
+            "components": [
+                "Transform",
+                "ParticleSystem",
+                "ParticleSystemRenderer"
+            ]
+        },
+        {
+            "name": "ChunkPrefab",
+            "path": "Assets/Prefabs/ChunkPrefab.prefab",
+            "components": [
+                "Transform",
+                "Grid"
+            ]
+        },
+        {
+            "name": "Text Popup",
+            "path": "Assets/TextMesh Pro/Examples & Extras/Prefabs/Text Popup.prefab",
+            "components": [
+                "RectTransform",
+                "CanvasRenderer",
+                "Image",
+                "VerticalLayoutGroup",
+                "ContentSizeFitter",
+                "CanvasGroup"
+            ]
+        },
+        {
+            "name": "TextMeshPro - Prefab 1",
+            "path": "Assets/TextMesh Pro/Examples & Extras/Prefabs/TextMeshPro - Prefab 1.prefab",
+            "components": [
+                "RectTransform",
+                "MeshFilter",
+                "MeshRenderer",
+                "TextMeshPro",
+                "CanvasRenderer"
+            ]
+        },
+        {
+            "name": "TextMeshPro - Prefab 2",
+            "path": "Assets/TextMesh Pro/Examples & Extras/Prefabs/TextMeshPro - Prefab 2.prefab",
+            "components": [
+                "RectTransform",
+                "MeshFilter",
+                "MeshRenderer",
+                "TextMeshPro",
+                "CanvasRenderer"
+            ]
+        },
+        {
+            "name": "MinimalPalette",
+            "path": "Assets/Tiles/Palettes/MinimalPalette.prefab",
+            "components": [
+                "Transform",
+                "Grid"
+            ]
+        },
+        {
+            "name": "Closed Sprite Shape",
+            "path": "Packages/com.unity.2d.spriteshape/Editor/ObjectMenuCreation/DefaultAssets/Sprite Shapes/Closed Sprite Shape.prefab",
+            "components": [
+                "Transform",
+                "SpriteShapeRenderer",
+                "SpriteShapeController"
+            ]
+        },
+        {
+            "name": "Open Sprite Shape",
+            "path": "Packages/com.unity.2d.spriteshape/Editor/ObjectMenuCreation/DefaultAssets/Sprite Shapes/Open Sprite Shape.prefab",
+            "components": [
+                "Transform",
+                "SpriteShapeRenderer",
+                "SpriteShapeController"
+            ]
+        },
+        {
+            "name": "DebugUICanvas",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Resources/DebugUICanvas.prefab",
+            "components": [
+                "RectTransform",
+                "Canvas",
+                "CanvasScaler",
+                "GraphicRaycaster",
+                "DebugUIHandlerCanvas"
+            ]
+        },
+        {
+            "name": "DebugUIPersistentCanvas",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Resources/DebugUIPersistentCanvas.prefab",
+            "components": [
+                "RectTransform",
+                "Canvas",
+                "CanvasScaler",
+                "GraphicRaycaster",
+                "DebugUIHandlerPersistentCanvas"
+            ]
+        },
+        {
+            "name": "DebugUIBitField",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIBitField.prefab",
+            "components": [
+                "RectTransform",
+                "VerticalLayoutGroup",
+                "ContentSizeFitter",
+                "DebugUIHandlerContainer",
+                "DebugUIHandlerBitField"
+            ]
+        },
+        {
+            "name": "DebugUIButton",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIButton.prefab",
+            "components": [
+                "RectTransform",
+                "CanvasRenderer",
+                "Image",
+                "Button",
+                "DebugUIHandlerButton"
+            ]
+        },
+        {
+            "name": "DebugUIColor",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIColor.prefab",
+            "components": [
+                "RectTransform",
+                "VerticalLayoutGroup",
+                "ContentSizeFitter",
+                "DebugUIHandlerColor",
+                "DebugUIHandlerContainer"
+            ]
+        },
+        {
+            "name": "DebugUIEnumField",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIEnumField.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerEnumField"
+            ]
+        },
+        {
+            "name": "DebugUIEnumHistory",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIEnumHistory.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerEnumHistory"
+            ]
+        },
+        {
+            "name": "DebugUIFloatField",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIFloatField.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerFloatField"
+            ]
+        },
+        {
+            "name": "DebugUIFoldout",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIFoldout.prefab",
+            "components": [
+                "RectTransform",
+                "VerticalLayoutGroup",
+                "ContentSizeFitter",
+                "DebugUIHandlerContainer",
+                "DebugUIHandlerFoldout"
+            ]
+        },
+        {
+            "name": "DebugUIGroup",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIGroup.prefab",
+            "components": [
+                "RectTransform",
+                "VerticalLayoutGroup",
+                "ContentSizeFitter",
+                "DebugUIHandlerContainer",
+                "DebugUIHandlerGroup"
+            ]
+        },
+        {
+            "name": "DebugUIHBox",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIHBox.prefab",
+            "components": [
+                "RectTransform",
+                "HorizontalLayoutGroup",
+                "ContentSizeFitter",
+                "DebugUIHandlerContainer",
+                "DebugUIHandlerHBox"
+            ]
+        },
+        {
+            "name": "DebugUIIntField",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIIntField.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerIntField"
+            ]
+        },
+        {
+            "name": "DebugUIMessageBox",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIMessageBox.prefab",
+            "components": [
+                "RectTransform",
+                "VerticalLayoutGroup",
+                "ContentSizeFitter",
+                "DebugUIHandlerMessageBox",
+                "CanvasRenderer",
+                "Image"
+            ]
+        },
+        {
+            "name": "DebugUIObject",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIObject.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerObject"
+            ]
+        },
+        {
+            "name": "DebugUIObjectList",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIObjectList.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerObjectList"
+            ]
+        },
+        {
+            "name": "DebugUIObjectPopupField",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIObjectPopupField.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerObjectPopupField"
+            ]
+        },
+        {
+            "name": "DebugUIPanel",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIPanel.prefab",
+            "components": [
+                "RectTransform",
+                "CanvasRenderer",
+                "Image",
+                "VerticalLayoutGroup",
+                "ContentSizeFitter",
+                "DebugUIHandlerContainer",
+                "DebugUIHandlerPanel"
+            ]
+        },
+        {
+            "name": "DebugUIProgressBar",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIProgressBar.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerProgressBar"
+            ]
+        },
+        {
+            "name": "DebugUIRow",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIRow.prefab",
+            "components": [
+                "RectTransform",
+                "VerticalLayoutGroup",
+                "ContentSizeFitter",
+                "DebugUIHandlerContainer",
+                "DebugUIHandlerRow"
+            ]
+        },
+        {
+            "name": "DebugUIToggle",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIToggle.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerToggle"
+            ]
+        },
+        {
+            "name": "DebugUIToggleHistory",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIToggleHistory.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerToggleHistory"
+            ]
+        },
+        {
+            "name": "DebugUIUIntField",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIUIntField.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerUIntField"
+            ]
+        },
+        {
+            "name": "DebugUIValue",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIValue.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerValue"
+            ]
+        },
+        {
+            "name": "DebugUIValuePersistent",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIValuePersistent.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerValue"
+            ]
+        },
+        {
+            "name": "DebugUIValueTuple",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIValueTuple.prefab",
+            "components": [
+                "RectTransform",
+                "DebugUIHandlerValueTuple"
+            ]
+        },
+        {
+            "name": "DebugUIVBox",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIVBox.prefab",
+            "components": [
+                "RectTransform",
+                "VerticalLayoutGroup",
+                "ContentSizeFitter",
+                "DebugUIHandlerContainer",
+                "DebugUIHandlerVBox"
+            ]
+        },
+        {
+            "name": "DebugUIVector2",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIVector2.prefab",
+            "components": [
+                "RectTransform",
+                "VerticalLayoutGroup",
+                "ContentSizeFitter",
+                "DebugUIHandlerContainer",
+                "DebugUIHandlerVector2"
+            ]
+        },
+        {
+            "name": "DebugUIVector3",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIVector3.prefab",
+            "components": [
+                "RectTransform",
+                "VerticalLayoutGroup",
+                "ContentSizeFitter",
+                "DebugUIHandlerContainer",
+                "DebugUIHandlerVector3"
+            ]
+        },
+        {
+            "name": "DebugUIVector4",
+            "path": "Packages/com.unity.render-pipelines.core/Runtime/Debugging/Prefabs/Widgets/DebugUIVector4.prefab",
+            "components": [
+                "RectTransform",
+                "VerticalLayoutGroup",
+                "ContentSizeFitter",
+                "DebugUIHandlerContainer",
+                "DebugUIHandlerVector4"
+            ]
+        }
+    ],
+    "assetStructure": {
+        "name": "Assets",
+        "path": "Assets",
+        "files": [
+            ".DS_Store",
+            "DefaultVolumeProfile.asset",
+            "InputSystem_Actions.inputactions",
+            "UniversalRenderPipelineGlobalSettings.asset",
+            "particles 1.prefab"
+        ],
+        "subfolders": [
+            {
+                "name": "2DPixelFantasyTilemapFree",
+                "path": "Assets/2DPixelFantasyTilemapFree",
+                "files": [],
+                "subfolders": [
+                    {
+                        "name": "Scenes",
+                        "path": "Assets/2DPixelFantasyTilemapFree/Scenes",
+                        "files": [
+                            "AllTiles.unity",
+                            "BaseScene.unity",
+                            "DemoScene.unity"
+                        ],
+                        "subfolders": []
+                    },
+                    {
+                        "name": "Sprites",
+                        "path": "Assets/2DPixelFantasyTilemapFree/Sprites",
+                        "files": [
+                            "4_Seasons_Ground_Tiles_50.asset",
+                            "4_Seasons_Ground_Tiles_6.asset",
+                            "4_Seasons_Ground_Tiles_64.asset",
+                            "4_Seasons_Ground_Tiles_72.asset",
+                            "4_Seasons_Ground_Tiles_85.asset",
+                            "4_Seasons_Ground_Tiles_86.asset",
+                            "buildings.png",
+                            "groud_h_border_2.asset",
+                            "groud_h_border_3.asset",
+                            "groud_v_border_0.asset",
+                            "groud_v_border_1.asset",
+                            "groud_v_border_2.asset",
+                            "groud_v_border_3.asset",
+                            "ground.png",
+                            "ground_corner_inner_0.asset",
+                            "ground_corner_inner_1.asset",
+                            "ground_corner_inner_2.asset"
+                        ],
+                        "subfolders": []
+                    },
+                    {
+                        "name": "TilePalettes",
+                        "path": "Assets/2DPixelFantasyTilemapFree/TilePalettes",
+                        "files": [
+                            ".DS_Store",
+                            "background.prefab"
+                        ],
+                        "subfolders": []
+                    }
+                ]
+            },
+            {
+                "name": "Editor",
+                "path": "Assets/Editor",
+                "files": [
+                    "SceneExporter.cs"
+                ],
+                "subfolders": []
+            },
+            {
+                "name": "Prefabs",
+                "path": "Assets/Prefabs",
+                "files": [
+                    "ChunkPrefab.prefab"
+                ],
+                "subfolders": []
+            },
+            {
+                "name": "Scenes",
+                "path": "Assets/Scenes",
+                "files": [
+                    "SampleScene.unity"
+                ],
+                "subfolders": []
+            },
+            {
+                "name": "Scripts",
+                "path": "Assets/Scripts",
+                "files": [
+                    "HousePlacer.cs",
+                    "MapManager.cs",
+                    "MapManager2.cs"
+                ],
+                "subfolders": []
+            },
+            {
+                "name": "Settings",
+                "path": "Assets/Settings",
+                "files": [
+                    "Lit2DSceneTemplate.scenetemplate",
+                    "Renderer2D.asset",
+                    "UniversalRP.asset"
+                ],
+                "subfolders": [
+                    {
+                        "name": "Scenes",
+                        "path": "Assets/Settings/Scenes",
+                        "files": [
+                            "URP2DSceneTemplate.unity"
+                        ],
+                        "subfolders": []
+                    }
+                ]
+            },
+            {
+                "name": "TextMesh Pro",
+                "path": "Assets/TextMesh Pro",
+                "files": [],
+                "subfolders": [
+                    {
+                        "name": "Examples & Extras",
+                        "path": "Assets/TextMesh Pro/Examples & Extras",
+                        "files": [],
+                        "subfolders": []
+                    },
+                    {
+                        "name": "Fonts",
+                        "path": "Assets/TextMesh Pro/Fonts",
+                        "files": [
+                            "LiberationSans - OFL.txt",
+                            "LiberationSans.ttf"
+                        ],
+                        "subfolders": []
+                    },
+                    {
+                        "name": "Resources",
+                        "path": "Assets/TextMesh Pro/Resources",
+                        "files": [
+                            "LineBreaking Following Characters.txt",
+                            "LineBreaking Leading Characters.txt",
+                            "TMP Settings.asset"
+                        ],
+                        "subfolders": []
+                    },
+                    {
+                        "name": "Shaders",
+                        "path": "Assets/TextMesh Pro/Shaders",
+                        "files": [
+                            "SDFFunctions.hlsl",
+                            "TMP_Bitmap-Custom-Atlas.shader",
+                            "TMP_Bitmap-Mobile.shader",
+                            "TMP_Bitmap.shader",
+                            "TMP_SDF Overlay.shader",
+                            "TMP_SDF SSD.shader",
+                            "TMP_SDF-HDRP LIT.shadergraph",
+                            "TMP_SDF-HDRP UNLIT.shadergraph",
+                            "TMP_SDF-Mobile Masking.shader",
+                            "TMP_SDF-Mobile Overlay.shader",
+                            "TMP_SDF-Mobile SSD.shader",
+                            "TMP_SDF-Mobile-2-Pass.shader",
+                            "TMP_SDF-Mobile.shader",
+                            "TMP_SDF-Surface-Mobile.shader",
+                            "TMP_SDF-Surface.shader",
+                            "TMP_SDF-URP Lit.shadergraph",
+                            "TMP_SDF-URP Unlit.shadergraph",
+                            "TMP_SDF.shader",
+                            "TMP_Sprite.shader",
+                            "TMPro.cginc",
+                            "TMPro_Mobile.cginc",
+                            "TMPro_Properties.cginc",
+                            "TMPro_Surface.cginc"
+                        ],
+                        "subfolders": []
+                    },
+                    {
+                        "name": "Sprites",
+                        "path": "Assets/TextMesh Pro/Sprites",
+                        "files": [
+                            "EmojiOne Attribution.txt",
+                            "EmojiOne.json",
+                            "EmojiOne.png"
+                        ],
+                        "subfolders": []
+                    }
+                ]
+            },
+            {
+                "name": "Tiles",
+                "path": "Assets/Tiles",
+                "files": [
+                    ".DS_Store",
+                    "RoadTile.asset",
+                    "RoadTile.png",
+                    "grass.asset"
+                ],
+                "subfolders": [
+                    {
+                        "name": "Palettes",
+                        "path": "Assets/Tiles/Palettes",
+                        "files": [
+                            "MinimalPalette.prefab"
+                        ],
+                        "subfolders": []
+                    },
+                    {
+                        "name": "kenney_city-kit-suburban_20",
+                        "path": "Assets/Tiles/kenney_city-kit-suburban_20",
+                        "files": [
+                            "License.txt",
+                            "Overview.html",
+                            "Preview (Variation A).png",
+                            "Preview (Variation B).png",
+                            "Preview (Variation C).png",
+                            "Preview.png",
+                            "Sample.png",
+                            "View Documentation.url",
+                            "Visit Kenney.url",
+                            "Visit Patreon.url"
+                        ],
+                        "subfolders": []
+                    },
+                    {
+                        "name": "kenney_pirate-pack",
+                        "path": "Assets/Tiles/kenney_pirate-pack",
+                        "files": [
+                            ".DS_Store",
+                            "License.txt",
+                            "Preview.png",
+                            "Preview_KenneyNL.png",
+                            "Sample.png"
+                        ],
+                        "subfolders": []
+                    },
+                    {
+                        "name": "kenney_top-down-tanks",
+                        "path": "Assets/Tiles/kenney_top-down-tanks",
+                        "files": [
+                            "license.txt",
+                            "preview.png",
+                            "sample.png"
+                        ],
+                        "subfolders": []
+                    }
+                ]
+            }
+        ]
+    }
+}
