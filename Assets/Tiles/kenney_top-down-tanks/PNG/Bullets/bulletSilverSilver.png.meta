@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      bulletSilverSilver_0: 2503266622127732997
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      bulletBlueSilver_outline_0: 97804359620902602
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

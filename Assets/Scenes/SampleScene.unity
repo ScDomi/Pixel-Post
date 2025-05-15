@@ -950,6 +950,8 @@ MonoBehaviour:
   mapWidth: 200
   mapHeight: 200
   noiseScale: 4.5
+  useRandomSeed: 1
+  seed: 0
   baseLayer: {fileID: 1904264253}
   waterTile: {fileID: 11400000, guid: f92e7510fea8e44728c8ed07a81852f4, type: 2}
   earthTile: {fileID: 11400000, guid: 14e78bdfa03a74993aec8575f7021878, type: 2}

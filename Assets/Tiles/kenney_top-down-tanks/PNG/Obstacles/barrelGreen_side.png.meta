@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      barrelGreen_side_0: 128116615863304885
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

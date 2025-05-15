@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      dinghyLarge2_0: -8216254659091917462
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

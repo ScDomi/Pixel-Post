@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      path-stones-messy_0: -4029476446197407581
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
