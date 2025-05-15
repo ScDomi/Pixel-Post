@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.Assertions;
 
 public class ProceduralMapGenerator : MonoBehaviour
 {
@@ -15,25 +16,44 @@ public class ProceduralMapGenerator : MonoBehaviour
     public bool useRandomSeed = true;
     public int seed = 0;
 
-    [Header("Terrain Tiles")]
-    public Tilemap baseLayer;
-    public Tile waterTile;
-    public Tile earthTile;
-    public Tile grassTile;
-    public Tile desertTile;
+    [Header("Terrain Layers")]
+    public Tilemap baseLayer;    // Base earth layer
+    public Tilemap grassLayer;   // Grass overlay
+    public Tilemap waterLayer;   // Water overlay
+    public Tilemap roadLayer;    // Road overlay
+    public Tilemap propsLayer;   // Props overlay (for misc decorations)
 
-    [Header("Road Generation")]
-    public Tilemap roadLayer;
-    public Tile roadTile;
-    public int targetRoadTiles = 400;       // Wie viele *einzigartige* Erd-Kacheln zur Straße werden sollen
+    [Header("Terrain Tiles")]
+    public Tile earthTile;       // Base terrain
+    public Tile grassTile;       // Grass overlay
+    public Tile waterTile;       // Water overlay
+    public RuleTile roadTile;    // Road tile with automatic connections
+
+    [Header("Generation Thresholds")]
     [Range(0f, 1f)]
-    public float turnChance = 0.05f;        // 5% Chance, bei jedem Schritt die Richtung neu zu wählen
+    public float grassThreshold = 0.4f;     // Above this value will be grass
+    [Range(0f, 1f)]
+    public float waterThreshold = 0.3f;     // Below this value will be water
 
     void Start()
     {
+        ValidateLayers();
         InitializeRandomization();
-        GenerateTerrain();
-        //GenerateRoadsOnEarth();
+        GenerateMap();
+    }
+
+    void ValidateLayers()
+    {
+        Assert.IsNotNull(baseLayer, "Base layer is required!");
+        Assert.IsNotNull(grassLayer, "Grass layer is required!");
+        Assert.IsNotNull(waterLayer, "Water layer is required!");
+        Assert.IsNotNull(roadLayer, "Road layer is required!");
+        Assert.IsNotNull(propsLayer, "Props layer is required!");
+        
+        Assert.IsNotNull(earthTile, "Earth tile is required!");
+        Assert.IsNotNull(grassTile, "Grass tile is required!");
+        Assert.IsNotNull(waterTile, "Water tile is required!");
+        Assert.IsNotNull(roadTile, "Road tile is required!");
     }
 
     void InitializeRandomization()
@@ -44,15 +64,34 @@ public class ProceduralMapGenerator : MonoBehaviour
         }
         Random.InitState(seed);
         
-        // Generiere zufällige Offsets für die Noise-Map
         xOffset = Random.Range(0f, 99999f);
         yOffset = Random.Range(0f, 99999f);
     }
 
-    /// <summary>
-    /// Malt das Terrain (Wasser, Erde, Gras, Wüste) wie gehabt.
-    /// </summary>
-    void GenerateTerrain()
+    void GenerateMap()
+    {
+        // 1. Fill entire base layer with earth
+        FillBaseLayer();
+        
+        // 2. Generate and overlay grass
+        GenerateGrassLayer();
+        
+        // 3. Generate and overlay water
+        GenerateWaterLayer();
+    }
+
+    void FillBaseLayer()
+    {
+        for (int x = 0; x < mapWidth; x++)
+        {
+            for (int y = 0; y < mapHeight; y++)
+            {
+                baseLayer.SetTile(new Vector3Int(x, y, 0), earthTile);
+            }
+        }
+    }
+
+    void GenerateGrassLayer()
     {
         for (int x = 0; x < mapWidth; x++)
         {
@@ -60,73 +99,35 @@ public class ProceduralMapGenerator : MonoBehaviour
             {
                 float nx = (x + xOffset) / (float)mapWidth * noiseScale;
                 float ny = (y + yOffset) / (float)mapHeight * noiseScale;
-                float h  = Mathf.PerlinNoise(nx, ny);
+                float noise = Mathf.PerlinNoise(nx, ny);
 
-                var pos = new Vector3Int(x, y, 0);
-                if (h < 0.2f)       baseLayer.SetTile(pos, waterTile);
-                else if (h < 0.35f)  baseLayer.SetTile(pos, earthTile);
-                else if (h < 0.8f)  baseLayer.SetTile(pos, grassTile);
-                else                baseLayer.SetTile(pos, desertTile);
+                if (noise > grassThreshold)
+                {
+                    grassLayer.SetTile(new Vector3Int(x, y, 0), grassTile);
+                }
             }
         }
     }
 
-    /// <summary>
-    /// Führt einen Random-Walk *nur* auf Erd-Kacheln durch und legt dort Straßen-Tiles.
-    /// </summary>
-    void GenerateRoadsOnEarth()
+    void GenerateWaterLayer()
     {
-        // 1) Alle Erd-Koordinaten sammeln
-        List<Vector2Int> earthCells = new List<Vector2Int>();
+        // Use different offset for water to create unique pattern
+        float waterXOffset = xOffset + 1000f;
+        float waterYOffset = yOffset + 1000f;
+
         for (int x = 0; x < mapWidth; x++)
-            for (int y = 0; y < mapHeight; y++)
-                if (baseLayer.GetTile(new Vector3Int(x, y, 0)) == earthTile)
-                    earthCells.Add(new Vector2Int(x, y));
-
-        if (earthCells.Count == 0) return;
-
-        // 2) Start-Punkt zufällig wählen
-        Vector2Int pos = earthCells[Random.Range(0, earthCells.Count)];
-
-        // 3) Initiale Laufrichtung
-        Vector2Int[] dirs = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
-        Vector2Int dir = dirs[Random.Range(0, dirs.Length)];
-
-        // 4) Random-Walk, bis wir genug *einzigartige* Tiles haben
-        var roadCells = new HashSet<Vector2Int>();
-        while (roadCells.Count < targetRoadTiles)
         {
-            // a) Aktuelle Position als Straße merken
-            roadCells.Add(pos);
-
-            // b) Alle möglichen nächsten Richtungen sammeln,
-            //    die noch Erd-Tile sind
-            var options = new List<Vector2Int>();
-            foreach (var d in dirs)
+            for (int y = 0; y < mapHeight; y++)
             {
-                var np = pos + d;
-                if (np.x >= 0 && np.x < mapWidth && np.y >= 0 && np.y < mapHeight)
+                float nx = (x + waterXOffset) / (float)mapWidth * noiseScale;
+                float ny = (y + waterYOffset) / (float)mapHeight * noiseScale;
+                float noise = Mathf.PerlinNoise(nx, ny);
+
+                if (noise < waterThreshold)
                 {
-                    if (baseLayer.GetTile(new Vector3Int(np.x, np.y, 0)) == earthTile)
-                        options.Add(d);
+                    waterLayer.SetTile(new Vector3Int(x, y, 0), waterTile);
                 }
             }
-            if (options.Count == 0)
-                break; // kein Erd-Nachbar mehr => Abbruch
-
-            // c) Mit 'turnChance' neue Richtung wählen, sonst geradeaus,
-            //    aber nur, wenn geradeaus noch Erd-Tile ist
-            if (Random.value < turnChance || !options.Contains(dir))
-                dir = options[Random.Range(0, options.Count)];
-
-            // d) Schritt ausführen
-            pos += dir;
-        }
-
-        // 5) Alle gesammelten Koordinaten als RoadTile setzen
-        foreach (var cell in roadCells)
-        {
-            roadLayer.SetTile(new Vector3Int(cell.x, cell.y, 0), roadTile);
         }
     }
 }

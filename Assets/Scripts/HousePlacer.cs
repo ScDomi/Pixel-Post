@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.Rendering;
+using UnityEngine.Assertions;
 
 /// <summary>
 /// Platziert Häuser auf Gras-Regionen und versieht sie beim Spawn mit SortingGroup auf "Props".
@@ -11,11 +12,8 @@ using UnityEngine.Rendering;
 /// </summary>
 public class HousePlacer : MonoBehaviour
 {
-    [Header("Map Settings")]
-    public Tilemap baseLayer;                  // Tilemap für das Terrain
-
-    [Header("Grass Tile Variants")]
-    public TileBase[] grassTiles;              // Alle Gras-Tiles
+    [Header("Required References")]
+    public ProceduralMapGenerator mapGen;      // Reference to map generator for layers
 
     [Header("House Settings")]
     public GameObject[] housePrefabs;          // FBX-House Prefabs
@@ -24,16 +22,30 @@ public class HousePlacer : MonoBehaviour
     public float minDistance = 5f;             // Mindestabstand zwischen Häusern
 
     [Header("Sorting Settings")]
-    public string sortingLayerName = "Props"; // Sorting Layer für Häuser
+    public string sortingLayerName = "Props";  // Sorting Layer für Häuser
     public int sortingOrder = 0;               // Order in Layer
 
     [Header("Parenting & Debug")]
     public Transform housesContainer;          // Parent-Transform für Häuser
     public bool debugLogs = true;              // Debug-Logs ein/aus
 
+    private Tilemap grassLayer;                // Reference to grass layer
+    private Tilemap waterLayer;                // Reference to water layer to avoid water areas
+
     private void Awake()
     {
-        // Erstelle Container, falls nicht zugewiesen
+        Assert.IsNotNull(mapGen, "MapGenerator reference is required!");
+        Assert.IsNotNull(housePrefabs, "House prefabs array is required!");
+        Assert.IsTrue(housePrefabs.Length > 0, "At least one house prefab is required!");
+
+        // Get layer references from map generator
+        grassLayer = mapGen.grassLayer;
+        waterLayer = mapGen.waterLayer;
+
+        Assert.IsNotNull(grassLayer, "Grass layer reference not found in MapGenerator!");
+        Assert.IsNotNull(waterLayer, "Water layer reference not found in MapGenerator!");
+
+        // Create container if not assigned
         if (housesContainer == null)
         {
             housesContainer = new GameObject("HouseContainer").transform;
@@ -45,16 +57,10 @@ public class HousePlacer : MonoBehaviour
 
     private IEnumerator Start()
     {
-        // Warte einen Frame, damit Terrain-Generation abgeschlossen ist
+        // Wait a frame for terrain generation to complete
         yield return null;
 
-        if (grassTiles == null || grassTiles.Length == 0)
-        {
-            Debug.LogError("HousePlacer: Keine grassTiles gesetzt!");
-            yield break;
-        }
-
-        // Regionen finden und Kandidaten ermitteln
+        // Find regions and candidates
         var regions = FindGrassRegions();
         if (debugLogs) Debug.Log($"Found {regions.Count} grass regions (>= {minRegionSize})");
 
@@ -66,7 +72,7 @@ public class HousePlacer : MonoBehaviour
 
     private List<List<Vector3Int>> FindGrassRegions()
     {
-        var bounds = baseLayer.cellBounds;
+        var bounds = grassLayer.cellBounds;
         var visited = new HashSet<Vector3Int>();
         var regions = new List<List<Vector3Int>>();
 
@@ -74,7 +80,7 @@ public class HousePlacer : MonoBehaviour
         {
             if (visited.Contains(pos)) continue;
             visited.Add(pos);
-            if (!IsGrassCell(pos)) continue;
+            if (!IsValidHousePosition(pos)) continue;
 
             var queue = new Queue<Vector3Int>();
             var region = new List<Vector3Int>();
@@ -89,7 +95,7 @@ public class HousePlacer : MonoBehaviour
                     var np = cur + d;
                     if (!bounds.Contains(np) || visited.Contains(np)) continue;
                     visited.Add(np);
-                    if (IsGrassCell(np)) queue.Enqueue(np);
+                    if (IsValidHousePosition(np)) queue.Enqueue(np);
                 }
             }
 
@@ -99,13 +105,10 @@ public class HousePlacer : MonoBehaviour
         return regions;
     }
 
-    private bool IsGrassCell(Vector3Int pos)
+    private bool IsValidHousePosition(Vector3Int pos)
     {
-        var tile = baseLayer.GetTile(pos);
-        if (tile == null) return false;
-        if (grassTiles.Contains(tile)) return true;
-        var name = tile.name.ToLower();
-        return grassTiles.Any(gt => name.Contains(gt.name.ToLower()));
+        // Position must have grass and no water
+        return grassLayer.GetTile(pos) != null && waterLayer.GetTile(pos) == null;
     }
 
     private void PlaceHouses(List<Vector3Int> candidates)
@@ -116,7 +119,7 @@ public class HousePlacer : MonoBehaviour
         foreach (var cell in candidates)
         {
             if (count >= numberOfHouses) break;
-            var worldPos = baseLayer.CellToWorld(cell) + new Vector3(0.5f, 0.5f, 0f);
+            var worldPos = grassLayer.CellToWorld(cell) + new Vector3(0.5f, 0.5f, 0f);
             if (placed.Any(p => Vector2.Distance(p, worldPos) < minDistance))
                 continue;
 
@@ -156,7 +159,7 @@ public class HousePlacer : MonoBehaviour
             else if (Mathf.Approximately(ry, 270f)) dir = Vector3Int.right;
 
             Vector3 sample = wp + (Vector3)dir * 0.5f;
-            Vector3Int cell = baseLayer.WorldToCell(sample);
+            Vector3Int cell = grassLayer.WorldToCell(sample);
             fronts.Add((cell, dir));
         }
         return fronts;

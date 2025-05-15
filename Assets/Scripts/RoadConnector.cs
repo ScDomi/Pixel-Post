@@ -3,29 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.Assertions;
 
 /// <summary>
-/// Verbindet Haus-Frontzellen per MST und zeichnet organische Straßen,
-/// basierend auf der Ausrichtung der Häuser. Wartet auf Haus-Platzierung.
+/// Verbindet Haus-Frontzellen per MST und zeichnet Straßen mit A* Pathfinding,
+/// basierend auf der Ausrichtung der Häuser und Terrain-Beschränkungen.
+/// Wartet auf Haus-Platzierung.
 /// </summary>
 public class RoadConnector : MonoBehaviour
 {
-    [Header("Referenzen")]
-    public HousePlacer housePlacer;   // HousePlacer-Komponente mit housesContainer
-    public Tilemap roadLayer;         // Tilemap für die Straßen
-    public Tilemap baseLayer;         // Tilemap für das Terrain
-    public Tile roadTile;             // Tile-Asset der Straße
-    public TileBase grassTile;        // Referenz zum Grass-Tile
+    [Header("Required References")]
+    public HousePlacer housePlacer;       // HousePlacer component
+    public ProceduralMapGenerator mapGen;  // Reference to map generator for layer access
 
-    [Header("Straßenbreiten")]
-    public int widthThreshold = 10;   // ab dieser Länge → breite Straße
-    public int defaultWidth = 2;      // normale Breite
-    public int wideWidth = 4;         // breite Straße
+    [Header("Road Settings")]
+    public RuleTile roadTile;             // Road RuleTile for automatic connections
 
-    [Header("Organische Straßen")]
-    public float noiseMagnitude = 0.5f;   // Stärke der zufälligen Abweichung
-    public float noiseFrequency = 0.1f;   // Häufigkeit der Abweichungen
-    public int smoothingPasses = 2;       // Wie oft geglättet wird
+    [Header("Path Constraints")]
+    public int maxEarthSteps = 25;        // Maximum consecutive steps on earth tiles
+    public int earthPenalty = 5;          // Pathfinding penalty for earth tiles
+
+    private Tilemap roadLayer;            // Reference to road layer
+    private Tilemap grassLayer;           // Reference to grass layer
+    private Tilemap waterLayer;           // Reference to water layer
+    private Tilemap baseLayer;            // Reference to base (earth) layer
+
+    private void Awake()
+    {
+        Assert.IsNotNull(housePlacer, "HousePlacer reference is required!");
+        Assert.IsNotNull(mapGen, "ProceduralMapGenerator reference is required!");
+        Assert.IsNotNull(roadTile, "Road tile is required!");
+        
+        // Get layer references from map generator
+        roadLayer = mapGen.roadLayer;
+        grassLayer = mapGen.grassLayer;
+        waterLayer = mapGen.waterLayer;
+        baseLayer = mapGen.baseLayer;
+        
+        Assert.IsNotNull(roadLayer, "Road layer reference not found in MapGenerator!");
+        Assert.IsNotNull(grassLayer, "Grass layer reference not found in MapGenerator!");
+        Assert.IsNotNull(waterLayer, "Water layer reference not found in MapGenerator!");
+        Assert.IsNotNull(baseLayer, "Base layer reference not found in MapGenerator!");
+    }
 
     private IEnumerator Start()
     {
@@ -42,7 +61,106 @@ public class RoadConnector : MonoBehaviour
 
         var edges = BuildMST(nodes);
         foreach (var (start, end) in edges)
-            DrawOrganicRoad(start.pos, start.dir, end.pos, end.dir);
+            ConnectPoints(start.pos, start.dir, end.pos, end.dir);
+    }
+
+    private void ConnectPoints(Vector3Int start, Vector3Int startDir, Vector3Int end, Vector3Int endDir)
+    {
+        var path = FindPath(start, end);
+        if (path == null || path.Count == 0)
+        {
+            Debug.LogWarning($"Could not find path between {start} and {end}");
+            return;
+        }
+
+        foreach (var pos in path)
+        {
+            roadLayer.SetTile(pos, roadTile);
+        }
+    }
+
+    private List<Vector3Int> FindPath(Vector3Int start, Vector3Int end)
+    {
+        var openSet = new PriorityQueue<Vector3Int>();
+        var closedSet = new HashSet<Vector3Int>();
+        var cameFrom = new Dictionary<Vector3Int, Vector3Int>();
+        var gScore = new Dictionary<Vector3Int, int>();
+        var earthSteps = new Dictionary<Vector3Int, int>();
+
+        openSet.Enqueue(start, 0);
+        gScore[start] = 0;
+        earthSteps[start] = IsEarthTile(start) ? 1 : 0;
+
+        while (openSet.Count > 0)
+        {
+            var current = openSet.Dequeue();
+            if (current == end)
+                return ReconstructPath(cameFrom, current);
+
+            closedSet.Add(current);
+
+            foreach (var dir in new[] { Vector3Int.up, Vector3Int.right, Vector3Int.down, Vector3Int.left })
+            {
+                var neighbor = current + dir;
+
+                if (closedSet.Contains(neighbor) || !IsValidPosition(neighbor))
+                    continue;
+
+                var isEarth = IsEarthTile(neighbor);
+                var newEarthSteps = isEarth ? earthSteps[current] + 1 : 0;
+
+                if (isEarth && newEarthSteps > maxEarthSteps)
+                    continue;
+
+                var tentativeGScore = gScore[current] + GetMovementCost(neighbor);
+
+                if (!gScore.ContainsKey(neighbor) || tentativeGScore < gScore[neighbor])
+                {
+                    cameFrom[neighbor] = current;
+                    gScore[neighbor] = tentativeGScore;
+                    earthSteps[neighbor] = newEarthSteps;
+
+                    var priority = tentativeGScore + ManhattanDistance(neighbor, end);
+                    openSet.Enqueue(neighbor, priority);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private bool IsValidPosition(Vector3Int pos)
+    {
+        return pos.x >= 0 && pos.x < mapGen.mapWidth &&
+               pos.y >= 0 && pos.y < mapGen.mapHeight &&
+               waterLayer.GetTile(pos) == null;
+    }
+
+    private bool IsEarthTile(Vector3Int pos)
+    {
+        return baseLayer.GetTile(pos) != null && grassLayer.GetTile(pos) == null;
+    }
+
+    private int GetMovementCost(Vector3Int pos)
+    {
+        return IsEarthTile(pos) ? earthPenalty : 1;
+    }
+
+    private int ManhattanDistance(Vector3Int a, Vector3Int b)
+    {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+    }
+
+    private List<Vector3Int> ReconstructPath(Dictionary<Vector3Int, Vector3Int> cameFrom, Vector3Int current)
+    {
+        var path = new List<Vector3Int> { current };
+        while (cameFrom.ContainsKey(current))
+        {
+            current = cameFrom[current];
+            path.Add(current);
+        }
+        path.Reverse();
+        return path;
     }
 
     private List<((Vector3Int pos, Vector3Int dir) a, (Vector3Int pos, Vector3Int dir) b)> BuildMST(List<(Vector3Int pos, Vector3Int dir)> nodes)
@@ -76,119 +194,23 @@ public class RoadConnector : MonoBehaviour
         return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
     }
 
-    private void DrawOrganicRoad(Vector3Int start, Vector3Int startDir, Vector3Int end, Vector3Int endDir)
+    private class PriorityQueue<T>
     {
-        // Generiere Kontrollpunkte für die Straße
-        var points = new List<Vector3>();
-        points.Add(start);
-        
-        // Füge Zwischenpunkte basierend auf Start- und Endrichtung hinzu
-        var midPoint = (Vector3)(start + end) * 0.5f;
-        var startControl = (Vector3)start + (Vector3)startDir * Vector3.Distance(start, end) * 0.3f;
-        var endControl = (Vector3)end - (Vector3)endDir * Vector3.Distance(start, end) * 0.3f;
-        
-        // Füge organische Variationen hinzu
-        for (float t = 0.2f; t <= 0.8f; t += 0.2f)
-        {
-            var basePoint = BezierPoint(start, startControl, endControl, end, t);
-            var noise = Mathf.PerlinNoise(basePoint.x * noiseFrequency, basePoint.y * noiseFrequency) * 2 - 1;
-            var perpendicular = new Vector3(-startDir.y, startDir.x, 0) * noise * noiseMagnitude;
-            points.Add(Vector3Int.RoundToInt(basePoint + perpendicular));
-        }
-        points.Add(end);
+        private List<(T item, int priority)> elements = new List<(T, int)>();
 
-        // Glätte die Punkte
-        for (int i = 0; i < smoothingPasses; i++)
+        public int Count => elements.Count;
+
+        public void Enqueue(T item, int priority)
         {
-            var smoothed = new List<Vector3> { points[0] };
-            for (int j = 1; j < points.Count - 1; j++)
-            {
-                var avg = (points[j - 1] + points[j] * 2 + points[j + 1]) * 0.25f;
-                smoothed.Add(avg);
-            }
-            smoothed.Add(points[points.Count - 1]);
-            points = smoothed;
+            elements.Add((item, priority));
+            elements.Sort((a, b) => a.priority.CompareTo(b.priority));
         }
 
-        // Zeichne die Straße zwischen den Punkten
-        for (int i = 0; i < points.Count - 1; i++)
+        public T Dequeue()
         {
-            DrawRoadSegment(Vector3Int.RoundToInt(points[i]), Vector3Int.RoundToInt(points[i + 1]));
+            var item = elements[0].item;
+            elements.RemoveAt(0);
+            return item;
         }
-    }
-
-    private Vector3 BezierPoint(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
-    {
-        float u = 1 - t;
-        float tt = t * t;
-        float uu = u * u;
-        float uuu = uu * u;
-        float ttt = tt * t;
-
-        Vector3 p = uuu * p0;
-        p += 3 * uu * t * p1;
-        p += 3 * u * tt * p2;
-        p += ttt * p3;
-
-        return p;
-    }
-
-    private void DrawRoadSegment(Vector3Int start, Vector3Int end)
-    {
-        var path = GetBresenhamLine(start, end);
-        foreach (var pos in path)
-        {
-            if (!IsValidRoadPosition(pos)) continue;
-            
-            int width = Vector3Int.Distance(start, end) >= widthThreshold ? wideWidth : defaultWidth;
-            int halfWidth = width / 2;
-
-            for (int w = -halfWidth; w < halfWidth; w++)
-            {
-                var dirVector = ((Vector3)end - (Vector3)start).normalized;
-                var perpendicular = new Vector3Int(-Mathf.RoundToInt(dirVector.y), Mathf.RoundToInt(dirVector.x), 0);
-                var roadPos = pos + perpendicular * w;
-                
-                if (IsValidRoadPosition(roadPos))
-                    roadLayer.SetTile(roadPos, roadTile);
-            }
-        }
-    }
-
-    private bool IsValidRoadPosition(Vector3Int pos)
-    {
-        var baseTile = baseLayer.GetTile(pos);
-        return baseTile != null && baseTile == grassTile;
-    }
-
-    private List<Vector3Int> GetBresenhamLine(Vector3Int start, Vector3Int end)
-    {
-        var points = new List<Vector3Int>();
-        int x = start.x;
-        int y = start.y;
-        int dx = Mathf.Abs(end.x - start.x);
-        int dy = Mathf.Abs(end.y - start.y);
-        int sx = start.x < end.x ? 1 : -1;
-        int sy = start.y < end.y ? 1 : -1;
-        int err = dx - dy;
-
-        while (true)
-        {
-            points.Add(new Vector3Int(x, y, 0));
-            if (x == end.x && y == end.y) break;
-            
-            int e2 = 2 * err;
-            if (e2 > -dy)
-            {
-                err -= dy;
-                x += sx;
-            }
-            if (e2 < dx)
-            {
-                err += dx;
-                y += sy;
-            }
-        }
-        return points;
     }
 }

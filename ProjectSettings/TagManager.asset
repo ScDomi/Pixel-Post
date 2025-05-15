@@ -41,20 +41,23 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Water
-    uniqueID: 4049987717
-    locked: 0
   - name: Ground
     uniqueID: 1518002273
+    locked: 0
+  - name: Grass
+    uniqueID: 857420625
+    locked: 0
+  - name: Water
+    uniqueID: 4049987717
     locked: 0
   - name: Road
     uniqueID: 2198346933
     locked: 0
-  - name: Cliffs
-    uniqueID: 2778994567
-    locked: 0
   - name: Props
     uniqueID: 795133127
+    locked: 0
+  - name: Cliffs
+    uniqueID: 2778994567
     locked: 0
   - name: Entities
     uniqueID: 2902784145
