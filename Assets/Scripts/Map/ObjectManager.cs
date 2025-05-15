@@ -20,6 +20,7 @@ public class ObjectManager : MonoBehaviour
     [Range(0f, 1f)]
     public float treeDensity = 0.3f;
     public float minTreeDistance = 2f;
+    public float minTreeRoadDistance = 3f;  // Mindestabstand zwischen Bäumen und Straßen
     
     [Header("Grass Settings")]
     public float highGrassRadius = 5f;
@@ -60,41 +61,14 @@ public class ObjectManager : MonoBehaviour
     private List<Vector3> placedObjects = new List<Vector3>();
     private Dictionary<GameObject, Vector3Int> houseDirections = new Dictionary<GameObject, Vector3Int>();
 
-    void Start()
-    {
-        // Wait for base map and tile enhancement
-        Invoke(nameof(PlaceObjects), 0.3f);
-    }
-
-    private void PlaceObjects()
+    private void Awake()
     {
         objectContainer = new GameObject("ObjectContainer").transform;
         objectContainer.parent = transform;
-
-        // Place objects in order: houses first, then trees, then grass
-        PlaceHouses();
-        PlaceForestVegetation();
-        PlaceLakeVegetation();
-        PlaceRoadVegetation();
     }
 
-    private bool IsValidHousePosition(Vector3 worldPos)
-    {
-        var cellPos = baseMapManager.baseLayer.WorldToCell(worldPos);
-        
-        // Position must have grass and no water
-        if (baseMapManager.grassLayer.GetTile(cellPos) == null || 
-            baseMapManager.waterLayer.GetTile(cellPos) != null)
-            return false;
-
-        // Check map bounds
-        if (!baseMapManager.baseLayer.cellBounds.Contains(cellPos))
-            return false;
-
-        return true;
-    }
-
-    private void PlaceHouses()
+    // Public methods for MapGenerationManager to call
+    public void PlaceHouses()
     {
         // Find all grass tiles first
         var bounds = baseMapManager.grassLayer.cellBounds;
@@ -127,6 +101,31 @@ public class ObjectManager : MonoBehaviour
             }
         }
     }
+
+    public void PlaceRemainingObjects()
+    {
+        PlaceForestVegetation();
+        PlaceLakeVegetation();
+        PlaceRoadVegetation();
+    }
+
+    private bool IsValidHousePosition(Vector3 worldPos)
+    {
+        var cellPos = baseMapManager.baseLayer.WorldToCell(worldPos);
+        
+        // Position must have grass and no water
+        if (baseMapManager.grassLayer.GetTile(cellPos) == null || 
+            baseMapManager.waterLayer.GetTile(cellPos) != null)
+            return false;
+
+        // Check map bounds
+        if (!baseMapManager.baseLayer.cellBounds.Contains(cellPos))
+            return false;
+
+        return true;
+    }
+
+
 
     private void PlaceHouse(Vector3 position)
     {
@@ -182,7 +181,8 @@ public class ObjectManager : MonoBehaviour
                 var worldPos = baseMapManager.baseLayer.CellToWorld(tile) + new Vector3(0.5f, 0.5f, 0f);
                 
                 if (Random.value < treeDensity && 
-                    !placedObjects.Any(p => Vector2.Distance(p, worldPos) < minTreeDistance))
+                    !placedObjects.Any(p => Vector2.Distance(p, worldPos) < minTreeDistance) &&
+                    IsValidPosition(worldPos, true))
                 {
                     PlaceTree(worldPos);
                 }
@@ -207,13 +207,12 @@ public class ObjectManager : MonoBehaviour
                     for (float dist = 1; dist <= lakeEffectRadius; dist += 1f)
                     {
                         Vector3 checkPos = worldPos + new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0) * dist;
-                        
-                        if (!IsValidPosition(checkPos)) continue;
+                                 if (!IsValidPosition(checkPos, true)) continue;
 
-                        float distFactor = 1 - (dist / lakeEffectRadius);
-                        
-                        if (Random.value < lakeTreeChance * distFactor)
-                            PlaceTree(checkPos);
+                float distFactor = 1 - (dist / lakeEffectRadius);
+                
+                if (Random.value < lakeTreeChance * distFactor)
+                    PlaceTree(checkPos);
                         if (Random.value < lakeHighGrassChance * distFactor)
                             PlaceGrass(checkPos, true);
                         if (Random.value < lakeLowGrassChance * distFactor)
@@ -318,7 +317,7 @@ public class ObjectManager : MonoBehaviour
         placedObjects.Add(position);
     }
 
-    private bool IsValidPosition(Vector3 worldPos)
+    private bool IsValidPosition(Vector3 worldPos, bool isTree = false)
     {
         var cellPos = baseMapManager.baseLayer.WorldToCell(worldPos);
         
@@ -326,10 +325,39 @@ public class ObjectManager : MonoBehaviour
         if (!baseMapManager.baseLayer.cellBounds.Contains(cellPos))
             return false;
 
+        // Check if position is in any earth region (no grass objects in earth regions)
+        foreach (var earthRegion in baseMapManager.EarthRegions)
+        {
+            if (earthRegion.Tiles.Contains(cellPos))
+                return false;
+        }
+
         // Check if position is not on water or road
         if (baseMapManager.waterLayer.GetTile(cellPos) != null || 
             baseMapManager.roadLayer.GetTile(cellPos) != null)
             return false;
+
+        // For trees, check minimum distance to roads
+        if (isTree)
+        {
+            var bounds = baseMapManager.roadLayer.cellBounds;
+            var roadTiles = new List<Vector3Int>();
+            
+            // Get all nearby road tiles
+            for (int x = -Mathf.CeilToInt(minTreeRoadDistance); x <= Mathf.CeilToInt(minTreeRoadDistance); x++)
+            {
+                for (int y = -Mathf.CeilToInt(minTreeRoadDistance); y <= Mathf.CeilToInt(minTreeRoadDistance); y++)
+                {
+                    var checkPos = cellPos + new Vector3Int(x, y, 0);
+                    if (bounds.Contains(checkPos) && baseMapManager.roadLayer.GetTile(checkPos) != null)
+                    {
+                        var roadWorldPos = baseMapManager.roadLayer.CellToWorld(checkPos) + new Vector3(0.5f, 0.5f, 0f);
+                        if (Vector2.Distance(worldPos, roadWorldPos) < minTreeRoadDistance)
+                            return false;
+                    }
+                }
+            }
+        }
 
         return true;
     }

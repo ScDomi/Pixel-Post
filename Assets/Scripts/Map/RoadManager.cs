@@ -18,13 +18,18 @@ public class RoadManager : MonoBehaviour
     private Tilemap roadLayer;
     private RuleTile roadTile;
 
-    private void Start()
+    private void Awake()
     {
-        // Wait for houses to be placed
-        StartCoroutine(WaitForHousesAndBuildRoads());
+        enabled = false; // Start disabled, MapGenerationManager will enable when ready
     }
 
-    private IEnumerator WaitForHousesAndBuildRoads()
+    private void OnEnable()
+    {
+        // When enabled by MapGenerationManager, start building roads
+        StartCoroutine(BuildRoads());
+    }
+
+    private IEnumerator BuildRoads()
     {
         // Wait for object manager to place houses
         yield return new WaitForSeconds(0.5f);

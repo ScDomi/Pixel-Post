@@ -119,6 +119,58 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &688541432
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 688541433}
+  - component: {fileID: 688541434}
+  m_Layer: 0
+  m_Name: MapGenerationManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &688541433
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688541432}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 54.956585, y: 12.572374, z: -0.0466}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1592490333}
+  - {fileID: 2033209919}
+  - {fileID: 1405060878}
+  - {fileID: 1083986676}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &688541434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688541432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4477b4a93fa3499da057d010bd7a2bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseMapManager: {fileID: 1592490332}
+  tileManager: {fileID: 1405060877}
+  objectManager: {fileID: 1083986675}
+  roadManager: {fileID: 2033209918}
 --- !u!1 &694064867
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +671,84 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1083986674
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1083986676}
+  - component: {fileID: 1083986675}
+  m_Layer: 0
+  m_Name: ObjectManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1083986675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083986674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39b56d9d939894e15b558d61087db632, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseMapManager: {fileID: 1592490332}
+  treePrefabs:
+  - {fileID: 8082689388017433024, guid: bd00ad35c541eaa44874dde41f3bea90, type: 3}
+  - {fileID: 8082689388017433024, guid: 181d619f05119f249bd1b8f9199cc4dc, type: 3}
+  highGrassPrefab: {fileID: 4003188186672061309, guid: 0708048d1a8567642a32d720914f4320, type: 3}
+  lowGrassPrefab: {fileID: 7855908118402871436, guid: 142ebffa6672cc54a933010c945059ef, type: 3}
+  housePrefabs:
+  - {fileID: 919132149155446097, guid: 92744fe4ba2484eefa4f921a692c8ba2, type: 3}
+  - {fileID: 919132149155446097, guid: a4c84eea219834d778ab1e1e2554985e, type: 3}
+  - {fileID: 919132149155446097, guid: d66562341fc5f4a708173382e01af316, type: 3}
+  - {fileID: 919132149155446097, guid: 0e3bc1547f12b45eca183a1242b2f6ea, type: 3}
+  - {fileID: 919132149155446097, guid: 1b1d679296b2149f0b61953973a45578, type: 3}
+  - {fileID: 919132149155446097, guid: 0e3bc1547f12b45eca183a1242b2f6ea, type: 3}
+  - {fileID: 919132149155446097, guid: 7364c469fde2d4c95802abbb9805bdbb, type: 3}
+  treeDensity: 0.097
+  minTreeDistance: 3
+  highGrassRadius: 5
+  lowGrassRadius: 8
+  highGrassDensity: 0.4
+  lowGrassDensity: 0.3
+  lakeTreeChance: 0.021
+  lakeEffectRadius: 6
+  lakeHighGrassChance: 0.131
+  lakeLowGrassChance: 0.69
+  roadGrassRadius: 3
+  roadGrassChance: 0.31
+  roadHighGrassRatio: 0.4
+  housesPerRegion: 2
+  minHouseDistance: 6.59
+  sortingLayerName: Props
+  treeSortingOrder: 3
+  houseSortingOrder: 2
+  highGrassSortingOrder: 1
+  lowGrassSortingOrder: 0
+--- !u!4 &1083986676
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1083986674}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 688541433}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1380801062
 GameObject:
   m_ObjectHideFlags: 0
@@ -755,6 +885,145 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1405060876
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1405060878}
+  - component: {fileID: 1405060877}
+  m_Layer: 0
+  m_Name: TileManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1405060877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1405060876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8838a1e8b5f0744ac8b5357d651e9c74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseMapManager: {fileID: 1592490332}
+  darkEarthTiles:
+  - {fileID: 11400000, guid: 5e76936474c7b4da890843f7c3fa5bae, type: 2}
+  - {fileID: 11400000, guid: 7e3f608f7362f4793b57aef1cd4ce301, type: 2}
+  - {fileID: 11400000, guid: c73762efaeaed448796a52689bbf0cab, type: 2}
+  - {fileID: 11400000, guid: cf71dcee64ac34b809f9c328a9143a4b, type: 2}
+  mediumEarthTiles:
+  - {fileID: 11400000, guid: ee6c343d0cfde45be9bfac43bb2415d6, type: 2}
+  - {fileID: 11400000, guid: 96fd62846450c485dbebfc7e7ec4a520, type: 2}
+  - {fileID: 11400000, guid: 1d9a3e037ca764ca88a93ecf5b25c4cc, type: 2}
+  - {fileID: 11400000, guid: 010b2b1e023df408fb82020b131fd32e, type: 2}
+  lightEarthTiles:
+  - {fileID: 11400000, guid: 7b99d32b8ab7d4b0a9d8eb3b56a31168, type: 2}
+  - {fileID: 11400000, guid: 2f93f662f17184f148eb2ec2bef6ada2, type: 2}
+  - {fileID: 11400000, guid: daa9b2a93b38b463dbfdd2a28a2cc301, type: 2}
+  - {fileID: 11400000, guid: 33f701229fedd4267bc33e673fec4c4c, type: 2}
+  lightGrassTiles:
+  - {fileID: 11400000, guid: d36c8f0ece44a447ebbea7869653de22, type: 2}
+  - {fileID: 11400000, guid: 0319ee565f5e44f51b4fe1ad2c39a3e2, type: 2}
+  - {fileID: 11400000, guid: d4585a6d162ee409996d27cd1aeb4e73, type: 2}
+  - {fileID: 11400000, guid: 366718e4b131a4e2d8529bf324d4c512, type: 2}
+  mediumGrassTiles:
+  - {fileID: 11400000, guid: cb621a5a54161481a9da5f3b3fb8a3b6, type: 2}
+  - {fileID: 11400000, guid: 0415a8bb3186e488c923c8468b43a12e, type: 2}
+  - {fileID: 11400000, guid: 804190d1c37b54007ac7e9ac0651fe20, type: 2}
+  - {fileID: 11400000, guid: 76910416caeb14e3aa1bd41902964ccb, type: 2}
+  darkGrassTiles:
+  - {fileID: 11400000, guid: cf549ee55ce1a411fa8196fc3abe2e89, type: 2}
+  - {fileID: 11400000, guid: 5501b47258f9d499887164ee7cd5bf5c, type: 2}
+  - {fileID: 11400000, guid: 12406dc1d6d72472c80764328b1f6cd9, type: 2}
+  - {fileID: 11400000, guid: 7f4fe2131ac864ee5989c317d140bd86, type: 2}
+  waterTileVariants:
+  - {fileID: 11400000, guid: f92e7510fea8e44728c8ed07a81852f4, type: 2}
+  roadTile: {fileID: 11400000, guid: 5eda2f0150dd1364caec3d50deaff2ea, type: 2}
+--- !u!4 &1405060878
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1405060876}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 688541433}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1592490331
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1592490333}
+  - component: {fileID: 1592490332}
+  m_Layer: 0
+  m_Name: BaseMapGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1592490332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592490331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4842fb40392af4812a16fc1f33d4f87b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectManager: {fileID: 0}
+  mapWidth: 100
+  mapHeight: 100
+  noiseScale: 4.5
+  useRandomSeed: 0
+  seed: 0
+  baseLayer: {fileID: 2056643467}
+  grassLayer: {fileID: 1380801066}
+  waterLayer: {fileID: 694064871}
+  roadLayer: {fileID: 913244446}
+  earthTile: {fileID: 11400000, guid: 14e78bdfa03a74993aec8575f7021878, type: 2}
+  grassTile: {fileID: 11400000, guid: e79b9f881982047d09aee03e9ec059f5, type: 2}
+  waterTile: {fileID: 11400000, guid: bc8d9a700458e5043af201bcc68584e9, type: 2}
+  roadTile: {fileID: 11400000, guid: 5eda2f0150dd1364caec3d50deaff2ea, type: 2}
+  grassThreshold: 0.4
+  waterThreshold: 0.3
+  minRegionSize: 4
+--- !u!4 &1592490333
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592490331}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 688541433}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1839389007
 GameObject:
   m_ObjectHideFlags: 0
@@ -803,6 +1072,54 @@ Transform:
   - {fileID: 913244443}
   - {fileID: 1076698028}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2033209917
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2033209919}
+  - component: {fileID: 2033209918}
+  m_Layer: 0
+  m_Name: RoadManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2033209918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033209917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 601e25a6539614cd2aa0b1de53456cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseMapManager: {fileID: 1592490332}
+  objectManager: {fileID: 1083986675}
+  maxEarthSteps: 25
+  earthPenalty: 5
+--- !u!4 &2033209919
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033209917}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 688541433}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2056643463
 GameObject:
@@ -946,3 +1263,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 959804532}
   - {fileID: 1839389009}
+  - {fileID: 688541433}

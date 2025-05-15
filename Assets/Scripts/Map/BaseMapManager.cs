@@ -8,6 +8,9 @@ using Map;
 
 public class BaseMapManager : MonoBehaviour
 {
+    [Header("Required References")]
+    public ObjectManager objectManager;   // Reference to ObjectManager
+
     [Header("Map Size")]
     public int mapWidth = 100;
     public int mapHeight = 100;
@@ -46,15 +49,8 @@ public class BaseMapManager : MonoBehaviour
     public List<Map.LakeRegion> LakeRegions { get; private set; } = new List<Map.LakeRegion>();
     public List<Map.HouseRegion> HouseRegions { get; private set; } = new List<Map.HouseRegion>();
 
-    void Start()
-    {
-        ValidateDependencies();
-        InitializeRandomization();
-        GenerateBaseMap();
-        DetectRegions();
-    }
-
-    private void ValidateDependencies()
+    // Methods are now public so they can be called by MapGenerationManager
+    public void ValidateDependencies()
     {
         Assert.IsNotNull(baseLayer, "Base layer is required!");
         Assert.IsNotNull(grassLayer, "Grass layer is required!");
@@ -67,7 +63,7 @@ public class BaseMapManager : MonoBehaviour
         Assert.IsNotNull(roadTile, "Road tile is required!");
     }
 
-    private void InitializeRandomization()
+    public void InitializeRandomization()
     {
         if (useRandomSeed)
             seed = Random.Range(0, 99999);
@@ -77,7 +73,7 @@ public class BaseMapManager : MonoBehaviour
         yOffset = Random.Range(0f, 99999f);
     }
 
-    private void GenerateBaseMap()
+    public void GenerateBaseMap()
     {
         // 1. Fill entire base layer with earth
         FillBaseLayer();
@@ -139,8 +135,9 @@ public class BaseMapManager : MonoBehaviour
         }
     }
 
-    private void DetectRegions()
+    public void DetectRegions()
     {
+        Debug.Log("BaseMapManager: Starting region detection...");
         var bounds = baseLayer.cellBounds;
         var visited = new HashSet<Vector3Int>();
 
@@ -151,6 +148,7 @@ public class BaseMapManager : MonoBehaviour
             (name, tiles) => new Map.EarthRegion(name, tiles, baseLayer),
             EarthRegions
         );
+        Debug.Log($"BaseMapManager: Found {EarthRegions.Count} earth regions");
 
         // Find Grass Regions
         visited.Clear();
@@ -160,6 +158,7 @@ public class BaseMapManager : MonoBehaviour
             (name, tiles) => new Map.GrassRegion(name, tiles, baseLayer),
             GrassRegions
         );
+        Debug.Log($"BaseMapManager: Found {GrassRegions.Count} grass regions");
 
         // Find Lake Regions
         visited.Clear();
@@ -169,44 +168,61 @@ public class BaseMapManager : MonoBehaviour
             (name, tiles) => new Map.LakeRegion(name, tiles, baseLayer),
             LakeRegions
         );
+        Debug.Log($"BaseMapManager: Found {LakeRegions.Count} lake regions");
 
-        // Wait a frame to let the ObjectManager place houses
+        // Detect House Regions
+        DetectHouseRegions();
+    }
+
+    private void DetectHouseRegions()
+    {
+        Debug.Log("BaseMapManager: Starting house region detection...");
+        // Start the coroutine to detect house regions after placement
         StartCoroutine(DetectHouseRegionsAfterPlacement());
     }
 
     private IEnumerator DetectHouseRegionsAfterPlacement()
     {
-        yield return new WaitForSeconds(0.5f); // Wait for houses to be placed
+        Debug.Log("BaseMapManager: Waiting for house placement...");
+        yield return new WaitForSeconds(0.5f);
 
-        var objectManager = GetComponent<ObjectManager>();
+        Debug.Log($"BaseMapManager: ObjectManager reference {(objectManager != null ? "found" : "not found")}");
+        
         if (objectManager != null)
         {
             var houseFronts = objectManager.GetHouseFrontPositions();
+            Debug.Log($"BaseMapManager: Found {houseFronts?.Count ?? 0} house positions");
+
             HouseRegions.Clear();
 
-            // Create house regions around each house
-            foreach (var front in houseFronts)
+            // Create house regions centered on the house front
+            if (houseFronts != null)
             {
-                var housePos = front.position - front.direction; // Get actual house position
-                var regionTiles = new List<Vector3Int>();
-                
-                // Add tiles in a 3x3 area around the house
-                for (int x = -1; x <= 1; x++)
+                foreach (var front in houseFronts)
                 {
-                    for (int y = -1; y <= 1; y++)
+                    Debug.Log($"BaseMapManager: Processing house at position {front.position}");
+                    var regionTiles = new List<Vector3Int>();
+                    var radius = 3; // Radius for house region influence
+                    
+                    // Add tiles in a circular area around the house front
+                    for (int x = -radius; x <= radius; x++)
                     {
-                        var checkPos = housePos + new Vector3Int(x, y, 0);
-                        if (grassLayer.GetTile(checkPos) != null)
+                        for (int y = -radius; y <= radius; y++)
                         {
-                            regionTiles.Add(checkPos);
+                            var checkPos = front.position + new Vector3Int(x, y, 0);
+                            if (Vector2.Distance(new Vector2(x, y), Vector2.zero) <= radius &&
+                                grassLayer.GetTile(checkPos) != null)
+                            {
+                                regionTiles.Add(checkPos);
+                            }
                         }
                     }
-                }
 
-                if (regionTiles.Count > 0)
-                {
-                    var region = new Map.HouseRegion($"House_{HouseRegions.Count}", regionTiles, baseLayer);
-                    HouseRegions.Add(region);
+                    if (regionTiles.Count > 0)
+                    {
+                        var region = new Map.HouseRegion($"House_{HouseRegions.Count}", regionTiles, baseLayer);
+                        HouseRegions.Add(region);
+                    }
                 }
             }
         }

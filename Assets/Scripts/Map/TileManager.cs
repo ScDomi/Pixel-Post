@@ -10,27 +10,26 @@ public class TileManager : MonoBehaviour
     public BaseMapManager baseMapManager;
 
     [Header("Earth Tiles")]
-    public Tile[] earthTileVariants;      // Different earth/dirt tile variants
+    public Tile[] darkEarthTiles;      // Darker earth/dirt variants for region centers
+    public Tile[] mediumEarthTiles;    // Medium earth/dirt variants
+    public Tile[] lightEarthTiles;     // Lighter earth/dirt variants for edges
     
     [Header("Grass Tiles")]
-    public Tile[] lightGrassTiles;        // Lighter grass variants
-    public Tile[] mediumGrassTiles;       // Medium grass variants
-    public Tile[] darkGrassTiles;         // Darker grass variants
+    public Tile[] lightGrassTiles;     // Lighter grass variants
+    public Tile[] mediumGrassTiles;    // Medium grass variants
+    public Tile[] darkGrassTiles;      // Darker grass variants
     
     [Header("Water Tiles")]
-    public Tile[] waterTileVariants;      // Different water tile variants
+    public Tile[] waterTileVariants;   // Different water tile variants
 
     [Header("Road Settings")]
-    public RuleTile roadTile;             // Road tile with automatic connections
+    public RuleTile roadTile;          // Road tile with automatic connections
 
-    void Start()
+    // All initialization is now controlled by MapGenerationManager
+    public void EnhanceTerrain()
     {
-        // Wait for base map generation to complete
-        Invoke(nameof(EnhanceTerrain), 0.2f);
-    }
-
-    private void EnhanceTerrain()
-    {
+        Debug.Log("TileManager: Starting terrain enhancement...");
+        
         // Replace basic earth tiles with variants
         foreach (var region in baseMapManager.EarthRegions)
         {
@@ -48,37 +47,93 @@ public class TileManager : MonoBehaviour
         {
             EnhanceWaterRegion(region);
         }
+
+        // Enhance house regions last to ensure they override other grass
+        foreach (var region in baseMapManager.HouseRegions)
+        {
+            EnhanceHouseRegion(region);
+        }
+
+        Debug.Log("TileManager: Terrain enhancement completed");
     }
 
     private void EnhanceEarthRegion(Map.EarthRegion region)
     {
-        if (earthTileVariants == null || earthTileVariants.Length == 0) return;
+        // Check if we have any earth tile variants
+        if ((darkEarthTiles == null || darkEarthTiles.Length == 0) &&
+            (mediumEarthTiles == null || mediumEarthTiles.Length == 0) &&
+            (lightEarthTiles == null || lightEarthTiles.Length == 0)) 
+        {
+            Debug.LogWarning($"TileManager: No earth tile variants available for region {region.Name}");
+            return;
+        }
 
+        // Get maximum distance from center for normalization
+        float maxDistance = 0f;
         foreach (var pos in region.Tiles)
         {
-            // Use position for consistent random selection
-            var tileIndex = Mathf.Abs((pos.x * 48271 + pos.y * 16807) % earthTileVariants.Length);
-            baseMapManager.baseLayer.SetTile(pos, earthTileVariants[tileIndex]);
+            var worldPos = baseMapManager.baseLayer.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f);
+            float distance = Vector3.Distance(worldPos, region.Center);
+            maxDistance = Mathf.Max(maxDistance, distance);
         }
+
+        int darkTiles = 0, mediumTiles = 0, lightTiles = 0;
+        foreach (var pos in region.Tiles)
+        {
+            var worldPos = baseMapManager.baseLayer.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f);
+            float distance = Vector3.Distance(worldPos, region.Center);
+            float normalizedDistance = distance / maxDistance;
+
+            // Add some noise to make the transitions less circular
+            float noise = Mathf.PerlinNoise(pos.x * 0.2f, pos.y * 0.2f) * 0.3f;
+            normalizedDistance = Mathf.Clamp01(normalizedDistance + noise);
+
+            Tile[] selectedSet;
+            if (normalizedDistance < 0.33f && darkEarthTiles != null && darkEarthTiles.Length > 0)
+            {
+                selectedSet = darkEarthTiles;
+                darkTiles++;
+            }
+            else if (normalizedDistance < 0.66f && mediumEarthTiles != null && mediumEarthTiles.Length > 0)
+            {
+                selectedSet = mediumEarthTiles;
+                mediumTiles++;
+            }
+            else if (lightEarthTiles != null && lightEarthTiles.Length > 0)
+            {
+                selectedSet = lightEarthTiles;
+                lightTiles++;
+            }
+            else
+            {
+                selectedSet = (darkEarthTiles?.Length > 0 ? darkEarthTiles : 
+                             mediumEarthTiles?.Length > 0 ? mediumEarthTiles : 
+                             lightEarthTiles)!;
+            }
+
+            var tileIndex = Mathf.Abs((pos.x * 48271 + pos.y * 16807) % selectedSet.Length);
+            baseMapManager.baseLayer.SetTile(pos, selectedSet[tileIndex]);
+        }
+
+        Debug.Log($"TileManager: Enhanced earth region {region.Name} with {darkTiles} dark, {mediumTiles} medium, {lightTiles} light tiles");
     }
 
     private void EnhanceGrassRegion(Map.GrassRegion region)
     {
-        if (lightGrassTiles == null && mediumGrassTiles == null && darkGrassTiles == null) return;
+        if (lightGrassTiles == null && mediumGrassTiles == null && darkGrassTiles == null)
+        {
+            Debug.LogWarning($"TileManager: No grass tile variants available for region {region.Name}");
+            return;
+        }
 
-        // Combine all available grass tiles
-        var allGrassTiles = new List<Tile>();
-        if (lightGrassTiles != null) allGrassTiles.AddRange(lightGrassTiles);
-        if (mediumGrassTiles != null) allGrassTiles.AddRange(mediumGrassTiles);
-        if (darkGrassTiles != null) allGrassTiles.AddRange(darkGrassTiles);
-
-        if (allGrassTiles.Count == 0) return;
-
+        int tileCount = 0;
         foreach (var pos in region.Tiles)
         {
-            // Use noise for more natural variation
-            float noiseVal = Mathf.PerlinNoise(pos.x * 0.1f, pos.y * 0.1f);
-            
+            // Use Perlin noise for organic variation
+            float baseNoise = Mathf.PerlinNoise(pos.x * 0.1f, pos.y * 0.1f);
+            float detailNoise = Mathf.PerlinNoise(pos.x * 0.3f, pos.y * 0.3f) * 0.3f;
+            float noiseVal = baseNoise + detailNoise;
+
             Tile[] selectedSet;
             if (noiseVal < 0.33f && lightGrassTiles != null && lightGrassTiles.Length > 0)
                 selectedSet = lightGrassTiles;
@@ -87,21 +142,85 @@ public class TileManager : MonoBehaviour
             else if (darkGrassTiles != null && darkGrassTiles.Length > 0)
                 selectedSet = darkGrassTiles;
             else
-                selectedSet = allGrassTiles.ToArray();
+            {
+                selectedSet = (darkGrassTiles?.Length > 0 ? darkGrassTiles : 
+                             mediumGrassTiles?.Length > 0 ? mediumGrassTiles : 
+                             lightGrassTiles)!;
+            }
 
             var tileIndex = Mathf.Abs((pos.x * 48271 + pos.y * 16807) % selectedSet.Length);
             baseMapManager.grassLayer.SetTile(pos, selectedSet[tileIndex]);
+            tileCount++;
         }
+
+        Debug.Log($"TileManager: Enhanced grass region {region.Name} with {tileCount} variant tiles");
     }
 
     private void EnhanceWaterRegion(Map.LakeRegion region)
     {
-        if (waterTileVariants == null || waterTileVariants.Length == 0) return;
+        if (waterTileVariants == null || waterTileVariants.Length == 0)
+        {
+            Debug.LogWarning($"TileManager: No water tile variants available for region {region.Name}");
+            return;
+        }
 
+        int tileCount = 0;
         foreach (var pos in region.Tiles)
         {
             var tileIndex = Mathf.Abs((pos.x * 48271 + pos.y * 16807) % waterTileVariants.Length);
             baseMapManager.waterLayer.SetTile(pos, waterTileVariants[tileIndex]);
+            tileCount++;
         }
+
+        Debug.Log($"TileManager: Enhanced water region {region.Name} with {tileCount} variant tiles");
+    }
+
+    private void EnhanceHouseRegion(Map.HouseRegion region)
+    {
+        Debug.Log($"TileManager: Starting to enhance house region {region.Name}");
+        
+        if (darkGrassTiles == null || darkGrassTiles.Length == 0)
+        {
+            Debug.LogWarning($"TileManager: No dark grass tiles available for house region {region.Name}");
+            return;
+        }
+
+        float radius = 5f;
+        var center = region.Center;
+        Debug.Log($"TileManager: Processing house region at {center} with radius {radius}");
+
+        var centerCell = baseMapManager.grassLayer.WorldToCell(center);
+        int radiusCells = Mathf.CeilToInt(radius);
+        int tilesChanged = 0;
+        int tilesChecked = 0;
+
+        for (int x = -radiusCells; x <= radiusCells; x++)
+        {
+            for (int y = -radiusCells; y <= radiusCells; y++)
+            {
+                var checkPos = centerCell + new Vector3Int(x, y, 0);
+                tilesChecked++;
+                
+                if (baseMapManager.grassLayer.GetTile(checkPos) == null)
+                {
+                    Debug.Log($"TileManager: No grass tile at position {checkPos}");
+                    continue;
+                }
+
+                float dist = Vector2.Distance(
+                    new Vector2(checkPos.x, checkPos.y),
+                    new Vector2(centerCell.x, centerCell.y)
+                );
+
+                if (dist <= radius)
+                {
+                    var tileIndex = Mathf.Abs((checkPos.x * 48271 + checkPos.y * 16807) % darkGrassTiles.Length);
+                    baseMapManager.grassLayer.SetTile(checkPos, darkGrassTiles[tileIndex]);
+                    tilesChanged++;
+                }
+            }
+        }
+
+        Debug.Log($"TileManager: House region {region.Name} enhancement complete. Checked {tilesChecked} tiles, changed {tilesChanged} to dark grass");
     }
 }
