@@ -1,0 +1,336 @@
+using UnityEngine;
+using UnityEngine.Tilemaps;
+using UnityEngine.Rendering;
+using System.Collections.Generic;
+using System.Linq;
+using Map;
+
+public class ObjectManager : MonoBehaviour
+{
+    [Header("Required References")]
+    public BaseMapManager baseMapManager;
+    
+    [Header("Vegetation Prefabs")]
+    public GameObject[] treePrefabs;
+    public GameObject highGrassPrefab;
+    public GameObject lowGrassPrefab;
+    public GameObject[] housePrefabs;
+
+    [Header("Forest Settings")]
+    [Range(0f, 1f)]
+    public float treeDensity = 0.3f;
+    public float minTreeDistance = 2f;
+    
+    [Header("Grass Settings")]
+    public float highGrassRadius = 5f;
+    public float lowGrassRadius = 8f;
+    [Range(0f, 1f)]
+    public float highGrassDensity = 0.4f;
+    [Range(0f, 1f)]
+    public float lowGrassDensity = 0.3f;
+    
+    [Header("Lake Vegetation")]
+    [Range(0f, 1f)]
+    public float lakeTreeChance = 0.2f;
+    public float lakeEffectRadius = 6f;
+    [Range(0f, 1f)]
+    public float lakeHighGrassChance = 0.4f;
+    [Range(0f, 1f)]
+    public float lakeLowGrassChance = 0.5f;
+    
+    [Header("Road Vegetation")]
+    public float roadGrassRadius = 3f;
+    [Range(0f, 1f)]
+    public float roadGrassChance = 0.3f;
+    [Range(0f, 1f)]
+    public float roadHighGrassRatio = 0.4f;
+
+    [Header("House Settings")]
+    public int housesPerRegion = 2;
+    public float minHouseDistance = 5f;
+    
+    [Header("Sorting Settings")]
+    public string sortingLayerName = "Props";
+    public int treeSortingOrder = 3;
+    public int houseSortingOrder = 2;
+    public int highGrassSortingOrder = 1;
+    public int lowGrassSortingOrder = 0;
+
+    private Transform objectContainer;
+    private List<Vector3> placedObjects = new List<Vector3>();
+    private Dictionary<GameObject, Vector3Int> houseDirections = new Dictionary<GameObject, Vector3Int>();
+
+    void Start()
+    {
+        // Wait for base map and tile enhancement
+        Invoke(nameof(PlaceObjects), 0.3f);
+    }
+
+    private void PlaceObjects()
+    {
+        objectContainer = new GameObject("ObjectContainer").transform;
+        objectContainer.parent = transform;
+
+        // Place objects in order: houses first, then trees, then grass
+        PlaceHouses();
+        PlaceForestVegetation();
+        PlaceLakeVegetation();
+        PlaceRoadVegetation();
+    }
+
+    private bool IsValidHousePosition(Vector3 worldPos)
+    {
+        var cellPos = baseMapManager.baseLayer.WorldToCell(worldPos);
+        
+        // Position must have grass and no water
+        if (baseMapManager.grassLayer.GetTile(cellPos) == null || 
+            baseMapManager.waterLayer.GetTile(cellPos) != null)
+            return false;
+
+        // Check map bounds
+        if (!baseMapManager.baseLayer.cellBounds.Contains(cellPos))
+            return false;
+
+        return true;
+    }
+
+    private void PlaceHouses()
+    {
+        // Find all grass tiles first
+        var bounds = baseMapManager.grassLayer.cellBounds;
+        var candidates = new List<Vector3Int>();
+        
+        foreach (var pos in bounds.allPositionsWithin)
+        {
+            if (IsValidHousePosition(baseMapManager.grassLayer.CellToWorld(pos)))
+            {
+                candidates.Add(pos);
+            }
+        }
+        
+        // Shuffle candidates for random placement
+        candidates = candidates.OrderBy(x => Random.value).ToList();
+        
+        // Try to place houses
+        int totalHouses = Mathf.Min(20, candidates.Count / 4); // Maximum 20 houses, or fewer if not enough space
+        int housesPlaced = 0;
+        
+        foreach (var cell in candidates)
+        {
+            if (housesPlaced >= totalHouses) break;
+            
+            var worldPos = baseMapManager.grassLayer.CellToWorld(cell) + new Vector3(0.5f, 0.5f, 0f);
+            if (!placedObjects.Any(p => Vector2.Distance(p, worldPos) < minHouseDistance))
+            {
+                PlaceHouse(worldPos);
+                housesPlaced++;
+            }
+        }
+    }
+
+    private void PlaceHouse(Vector3 position)
+    {
+        var prefab = housePrefabs[Random.Range(0, housePrefabs.Length)];
+        
+        // Randomly choose one of 4 rotations
+        var rotationAngle = Random.Range(0, 4) * 90f;
+        var rotation = Quaternion.Euler(0, rotationAngle, 0);
+        var house = Instantiate(prefab, position, rotation, objectContainer);
+        
+        // Add sorting group
+        var sg = house.AddComponent<SortingGroup>();
+        sg.sortingLayerName = sortingLayerName;
+        sg.sortingOrder = houseSortingOrder;
+        
+        // Store house direction based on rotation
+        Vector3Int direction;
+        if (rotationAngle == 0f) direction = Vector3Int.down;
+        else if (rotationAngle == 90f) direction = Vector3Int.left;
+        else if (rotationAngle == 180f) direction = Vector3Int.up;
+        else direction = Vector3Int.right;
+        
+        houseDirections[house] = direction;
+        placedObjects.Add(position);
+    }
+
+    public List<RoadManager.HouseFront> GetHouseFrontPositions()
+    {
+        var fronts = new List<RoadManager.HouseFront>();
+        
+        foreach (var houseEntry in houseDirections)
+        {
+            var house = houseEntry.Key;
+            var dir = houseEntry.Value;
+            var worldPos = house.transform.position;
+            
+            // Get tile position in front of house
+            var samplePos = worldPos + (Vector3)dir * 0.5f;
+            var tilePos = baseMapManager.grassLayer.WorldToCell(samplePos);
+            
+            fronts.Add(new RoadManager.HouseFront(tilePos, dir));
+        }
+        
+        return fronts;
+    }
+
+    private void PlaceForestVegetation()
+    {
+        foreach (var region in baseMapManager.EarthRegions)
+        {
+            foreach (var tile in region.Tiles)
+            {
+                var worldPos = baseMapManager.baseLayer.CellToWorld(tile) + new Vector3(0.5f, 0.5f, 0f);
+                
+                if (Random.value < treeDensity && 
+                    !placedObjects.Any(p => Vector2.Distance(p, worldPos) < minTreeDistance))
+                {
+                    PlaceTree(worldPos);
+                }
+            }
+
+            // Place grass around the forest
+            PlaceGrassAroundRegion(region);
+        }
+    }
+
+    private void PlaceLakeVegetation()
+    {
+        foreach (var region in baseMapManager.LakeRegions)
+        {
+            foreach (var tile in region.Tiles)
+            {
+                var worldPos = baseMapManager.waterLayer.CellToWorld(tile) + new Vector3(0.5f, 0.5f, 0f);
+                
+                for (float angle = 0; angle < 360; angle += 45)
+                {
+                    float rad = angle * Mathf.Deg2Rad;
+                    for (float dist = 1; dist <= lakeEffectRadius; dist += 1f)
+                    {
+                        Vector3 checkPos = worldPos + new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0) * dist;
+                        
+                        if (!IsValidPosition(checkPos)) continue;
+
+                        float distFactor = 1 - (dist / lakeEffectRadius);
+                        
+                        if (Random.value < lakeTreeChance * distFactor)
+                            PlaceTree(checkPos);
+                        if (Random.value < lakeHighGrassChance * distFactor)
+                            PlaceGrass(checkPos, true);
+                        if (Random.value < lakeLowGrassChance * distFactor)
+                            PlaceGrass(checkPos, false);
+                    }
+                }
+            }
+        }
+    }
+
+    private void PlaceRoadVegetation()
+    {
+        var roadBounds = baseMapManager.roadLayer.cellBounds;
+        foreach (var pos in roadBounds.allPositionsWithin)
+        {
+            if (baseMapManager.roadLayer.GetTile(pos) == null) continue;
+
+            var worldPos = baseMapManager.roadLayer.CellToWorld(pos) + new Vector3(0.5f, 0.5f, 0f);
+            
+            for (float angle = 0; angle < 360; angle += 30)
+            {
+                float rad = angle * Mathf.Deg2Rad;
+                for (float dist = 1; dist <= roadGrassRadius; dist += 0.5f)
+                {
+                    if (Random.value > roadGrassChance) continue;
+
+                    Vector3 checkPos = worldPos + new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0) * dist;
+                    if (!IsValidPosition(checkPos)) continue;
+
+                    PlaceGrass(checkPos, Random.value < roadHighGrassRatio);
+                }
+            }
+        }
+    }
+
+    private void PlaceGrassAroundRegion(Map.BaseRegion region)
+    {
+        // Place high grass closer to the region
+        foreach (var tile in region.Tiles)
+        {
+            var worldPos = baseMapManager.baseLayer.CellToWorld(tile) + new Vector3(0.5f, 0.5f, 0f);
+            PlaceGrassInRadius(worldPos, highGrassRadius, highGrassDensity, true);
+        }
+
+        // Place low grass in a wider radius
+        foreach (var tile in region.Tiles)
+        {
+            var worldPos = baseMapManager.baseLayer.CellToWorld(tile) + new Vector3(0.5f, 0.5f, 0f);
+            PlaceGrassInRadius(worldPos, lowGrassRadius, lowGrassDensity, false);
+        }
+    }
+
+    private void PlaceGrassInRadius(Vector3 center, float radius, float density, bool isHighGrass)
+    {
+        for (float angle = 0; angle < 360; angle += 15)
+        {
+            float rad = angle * Mathf.Deg2Rad;
+            for (float dist = 1; dist <= radius; dist += 0.5f)
+            {
+                if (Random.value > density) continue;
+
+                Vector3 checkPos = center + new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0) * dist;
+                if (!IsValidPosition(checkPos)) continue;
+
+                PlaceGrass(checkPos, isHighGrass);
+            }
+        }
+    }
+
+    private void PlaceTree(Vector3 position)
+    {
+        var prefab = treePrefabs[Random.Range(0, treePrefabs.Length)];
+        var rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+        var tree = Instantiate(prefab, position, rotation, objectContainer);
+
+        var sg = tree.AddComponent<SortingGroup>();
+        sg.sortingLayerName = sortingLayerName;
+        sg.sortingOrder = treeSortingOrder;
+
+        float scale = Random.Range(0.9f, 1.1f);
+        tree.transform.localScale *= scale;
+
+        placedObjects.Add(position);
+    }
+
+    private void PlaceGrass(Vector3 position, bool isHighGrass)
+    {
+        if (placedObjects.Any(p => Vector2.Distance(p, position) < minTreeDistance * 0.5f))
+            return;
+
+        var prefab = isHighGrass ? highGrassPrefab : lowGrassPrefab;
+        var rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+        var grass = Instantiate(prefab, position, rotation, objectContainer);
+
+        var sg = grass.AddComponent<SortingGroup>();
+        sg.sortingLayerName = sortingLayerName;
+        sg.sortingOrder = isHighGrass ? highGrassSortingOrder : lowGrassSortingOrder;
+
+        float scale = Random.Range(0.8f, 1.2f);
+        grass.transform.localScale *= scale;
+
+        placedObjects.Add(position);
+    }
+
+    private bool IsValidPosition(Vector3 worldPos)
+    {
+        var cellPos = baseMapManager.baseLayer.WorldToCell(worldPos);
+        
+        // Check if position is within map bounds
+        if (!baseMapManager.baseLayer.cellBounds.Contains(cellPos))
+            return false;
+
+        // Check if position is not on water or road
+        if (baseMapManager.waterLayer.GetTile(cellPos) != null || 
+            baseMapManager.roadLayer.GetTile(cellPos) != null)
+            return false;
+
+        return true;
+    }
+}
