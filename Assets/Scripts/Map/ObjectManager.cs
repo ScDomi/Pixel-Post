@@ -316,49 +316,48 @@ public class ObjectManager : MonoBehaviour
 
         placedObjects.Add(position);
     }
+private bool IsValidPosition(Vector3 worldPos, bool isTree = false)
+{
+    var cellPos = baseMapManager.baseLayer.WorldToCell(worldPos);
 
-    private bool IsValidPosition(Vector3 worldPos, bool isTree = false)
+    // Check if position is within map bounds
+    if (!baseMapManager.baseLayer.cellBounds.Contains(cellPos))
+        return false;
+
+    // Check if position is in any earth region (no grass objects in earth regions)
+    if (!isTree) // <--- NUR für Gras, NICHT für Bäume!
     {
-        var cellPos = baseMapManager.baseLayer.WorldToCell(worldPos);
-        
-        // Check if position is within map bounds
-        if (!baseMapManager.baseLayer.cellBounds.Contains(cellPos))
-            return false;
-
-        // Check if position is in any earth region (no grass objects in earth regions)
         foreach (var earthRegion in baseMapManager.EarthRegions)
         {
             if (earthRegion.Tiles.Contains(cellPos))
                 return false;
         }
+    }
 
-        // Check if position is not on water or road
-        if (baseMapManager.waterLayer.GetTile(cellPos) != null || 
-            baseMapManager.roadLayer.GetTile(cellPos) != null)
-            return false;
+    // Check if position is not on water or road
+    if (baseMapManager.waterLayer.GetTile(cellPos) != null || 
+        baseMapManager.roadLayer.GetTile(cellPos) != null)
+        return false;
 
-        // For trees, check minimum distance to roads
-        if (isTree)
+    // For trees, check minimum distance to roads
+    if (isTree)
+    {
+        var bounds = baseMapManager.roadLayer.cellBounds;
+        for (int x = -Mathf.CeilToInt(minTreeRoadDistance); x <= Mathf.CeilToInt(minTreeRoadDistance); x++)
         {
-            var bounds = baseMapManager.roadLayer.cellBounds;
-            var roadTiles = new List<Vector3Int>();
-            
-            // Get all nearby road tiles
-            for (int x = -Mathf.CeilToInt(minTreeRoadDistance); x <= Mathf.CeilToInt(minTreeRoadDistance); x++)
+            for (int y = -Mathf.CeilToInt(minTreeRoadDistance); y <= Mathf.CeilToInt(minTreeRoadDistance); y++)
             {
-                for (int y = -Mathf.CeilToInt(minTreeRoadDistance); y <= Mathf.CeilToInt(minTreeRoadDistance); y++)
+                var checkPos = cellPos + new Vector3Int(x, y, 0);
+                if (bounds.Contains(checkPos) && baseMapManager.roadLayer.GetTile(checkPos) != null)
                 {
-                    var checkPos = cellPos + new Vector3Int(x, y, 0);
-                    if (bounds.Contains(checkPos) && baseMapManager.roadLayer.GetTile(checkPos) != null)
-                    {
-                        var roadWorldPos = baseMapManager.roadLayer.CellToWorld(checkPos) + new Vector3(0.5f, 0.5f, 0f);
-                        if (Vector2.Distance(worldPos, roadWorldPos) < minTreeRoadDistance)
-                            return false;
-                    }
+                    var roadWorldPos = baseMapManager.roadLayer.CellToWorld(checkPos) + new Vector3(0.5f, 0.5f, 0f);
+                    if (Vector2.Distance(worldPos, roadWorldPos) < minTreeRoadDistance)
+                        return false;
                 }
             }
         }
-
-        return true;
     }
+
+    return true;
+}
 }

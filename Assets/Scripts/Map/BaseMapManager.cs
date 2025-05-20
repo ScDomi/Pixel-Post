@@ -149,6 +149,11 @@ public class BaseMapManager : MonoBehaviour
             EarthRegions
         );
         Debug.Log($"BaseMapManager: Found {EarthRegions.Count} earth regions");
+        for (int i = 0; i < EarthRegions.Count; i++)
+        {
+            var region = EarthRegions[i];
+            Debug.Log($"EarthRegion {i}: Name={region.Name}, Size={region.Size}, Center={region.Center}, Bounds={region.Bounds}");
+        }
 
         // Find Grass Regions
         visited.Clear();

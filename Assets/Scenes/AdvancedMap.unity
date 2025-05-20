@@ -709,13 +709,9 @@ MonoBehaviour:
   housePrefabs:
   - {fileID: 919132149155446097, guid: 92744fe4ba2484eefa4f921a692c8ba2, type: 3}
   - {fileID: 919132149155446097, guid: a4c84eea219834d778ab1e1e2554985e, type: 3}
-  - {fileID: 919132149155446097, guid: d66562341fc5f4a708173382e01af316, type: 3}
-  - {fileID: 919132149155446097, guid: 0e3bc1547f12b45eca183a1242b2f6ea, type: 3}
-  - {fileID: 919132149155446097, guid: 1b1d679296b2149f0b61953973a45578, type: 3}
-  - {fileID: 919132149155446097, guid: 0e3bc1547f12b45eca183a1242b2f6ea, type: 3}
-  - {fileID: 919132149155446097, guid: 7364c469fde2d4c95802abbb9805bdbb, type: 3}
   treeDensity: 0.097
   minTreeDistance: 3
+  minTreeRoadDistance: 3
   highGrassRadius: 5
   lowGrassRadius: 8
   highGrassDensity: 0.4
@@ -996,7 +992,7 @@ MonoBehaviour:
   mapWidth: 100
   mapHeight: 100
   noiseScale: 4.5
-  useRandomSeed: 0
+  useRandomSeed: 1
   seed: 0
   baseLayer: {fileID: 2056643467}
   grassLayer: {fileID: 1380801066}
