@@ -130,10 +130,9 @@ public class ObjectManager : MonoBehaviour
     private void PlaceHouse(Vector3 position)
     {
         var prefab = housePrefabs[Random.Range(0, housePrefabs.Length)];
-        
-        // Randomly choose one of 4 rotations
-        var rotationAngle = Random.Range(0, 4) * 90f;
-        var rotation = Quaternion.Euler(0, rotationAngle, 0);
+        // Erst -90° um Y, dann 90° um Z, dann random um X
+        float randomX = Random.Range(0, 360);
+        var rotation = Quaternion.Euler(randomX, -90f, 90f);
         var house = Instantiate(prefab, position, rotation, objectContainer);
         
         // Add sorting group
@@ -143,9 +142,10 @@ public class ObjectManager : MonoBehaviour
         
         // Store house direction based on rotation
         Vector3Int direction;
-        if (rotationAngle == 0f) direction = Vector3Int.down;
-        else if (rotationAngle == 90f) direction = Vector3Int.left;
-        else if (rotationAngle == 180f) direction = Vector3Int.up;
+        // Die Richtung bleibt wie gehabt, da sie von der ursprünglichen Logik abhängt
+        if (Mathf.Approximately(rotation.eulerAngles.y, 0f)) direction = Vector3Int.down;
+        else if (Mathf.Approximately(rotation.eulerAngles.y, 90f)) direction = Vector3Int.left;
+        else if (Mathf.Approximately(rotation.eulerAngles.y, 180f)) direction = Vector3Int.up;
         else direction = Vector3Int.right;
         
         houseDirections[house] = direction;
@@ -285,7 +285,9 @@ public class ObjectManager : MonoBehaviour
     private void PlaceTree(Vector3 position)
     {
         var prefab = treePrefabs[Random.Range(0, treePrefabs.Length)];
-        var rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+        // Erst -90° um Y, dann 90° um Z, dann random um X
+        float randomX = Random.Range(0, 360);
+        var rotation = Quaternion.Euler(randomX, -90f, 90f);
         var tree = Instantiate(prefab, position, rotation, objectContainer);
 
         var sg = tree.AddComponent<SortingGroup>();
@@ -302,9 +304,10 @@ public class ObjectManager : MonoBehaviour
     {
         if (placedObjects.Any(p => Vector2.Distance(p, position) < minTreeDistance * 0.5f))
             return;
-
         var prefab = isHighGrass ? highGrassPrefab : lowGrassPrefab;
-        var rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+        // Erst -90° um Y, dann 90° um Z, dann random um X
+        float randomX = Random.Range(0, 360);
+        var rotation = Quaternion.Euler(randomX, -90f, 90f);
         var grass = Instantiate(prefab, position, rotation, objectContainer);
 
         var sg = grass.AddComponent<SortingGroup>();
