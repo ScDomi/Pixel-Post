@@ -9,7 +9,6 @@ public class RoadManager : MonoBehaviour
 {
     [Header("Required References")]
     public BaseMapManager baseMapManager;
-    public ObjectManager objectManager;
 
     [Header("Road Settings")]
     public int maxEarthSteps = 25;        // Maximum consecutive steps on earth tiles
@@ -18,14 +17,28 @@ public class RoadManager : MonoBehaviour
     private Tilemap roadLayer;
     private RuleTile roadTile;
 
+    private List<HouseFront> allHouseFronts;
+
+    public Vector2Int globalOrigin;
+    public Vector2Int globalSize;
+
     private void Awake()
     {
         enabled = false; // Start disabled, MapGenerationManager will enable when ready
     }
 
+    public void SetHouseFronts(List<HouseFront> houseFronts)
+    {
+        allHouseFronts = houseFronts;
+    }
+
     private void OnEnable()
     {
-        // When enabled by MapGenerationManager, start building roads
+        if (allHouseFronts == null || allHouseFronts.Count < 2)
+        {
+            Debug.LogWarning("RoadManager: Not enough houses to build roads (minimum 2 required).");
+            return;
+        }
         StartCoroutine(BuildRoads());
     }
 
@@ -36,14 +49,7 @@ public class RoadManager : MonoBehaviour
 
         roadLayer = baseMapManager.roadLayer;
         roadTile = baseMapManager.roadTile;
-
-        var houseFronts = objectManager.GetHouseFrontPositions();
-        if (houseFronts.Count < 2)
-        {
-            Debug.LogWarning("RoadManager: Not enough houses to build roads (minimum 2 required).");
-            yield break;
-        }
-
+        var houseFronts = allHouseFronts;
         var edges = BuildMST(houseFronts);
         foreach (var (start, end) in edges)
         {
@@ -118,8 +124,9 @@ public class RoadManager : MonoBehaviour
 
     private bool IsValidPosition(Vector3Int pos)
     {
-        return pos.x >= 0 && pos.x < baseMapManager.mapWidth &&
-               pos.y >= 0 && pos.y < baseMapManager.mapHeight &&
+        // Prüfe auf globalen Bereich statt nur Biome
+        return pos.x >= globalOrigin.x && pos.x < globalOrigin.x + globalSize.x &&
+               pos.y >= globalOrigin.y && pos.y < globalOrigin.y + globalSize.y &&
                baseMapManager.waterLayer.GetTile(pos) == null;
     }
 

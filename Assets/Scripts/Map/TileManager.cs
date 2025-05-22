@@ -6,6 +6,9 @@ using System.Linq;
 
 public class TileManager : MonoBehaviour
 {
+    [HideInInspector] public Vector2Int origin;
+    [HideInInspector] public Vector2Int biomeSize;
+
     [Header("Required References")]
     public BaseMapManager baseMapManager;
 
@@ -28,33 +31,55 @@ public class TileManager : MonoBehaviour
     // All initialization is now controlled by MapGenerationManager
     public void EnhanceTerrain()
     {
-        Debug.Log("TileManager: Starting terrain enhancement...");
-        
-        // Replace basic earth tiles with variants
-        foreach (var region in baseMapManager.EarthRegions)
+        Debug.Log($"TileManager ({this.name}): Starting terrain enhancement for assigned biome...");
+
+        // Nur die Regionen des eigenen Bioms bearbeiten
+        if (darkEarthTiles != null && (darkEarthTiles.Length > 0 || mediumEarthTiles?.Length > 0 || lightEarthTiles?.Length > 0))
         {
-            EnhanceEarthRegion(region);
+            foreach (var region in baseMapManager.EarthRegions)
+            {
+                if (IsRegionInMyBiome(region.Center))
+                    EnhanceEarthRegion(region);
+            }
         }
 
-        // Replace basic grass tiles with variants
-        foreach (var region in baseMapManager.GrassRegions)
+        if (lightGrassTiles != null || mediumGrassTiles != null || darkGrassTiles != null)
         {
-            EnhanceGrassRegion(region);
+            foreach (var region in baseMapManager.GrassRegions)
+            {
+                if (IsRegionInMyBiome(region.Center))
+                    EnhanceGrassRegion(region);
+            }
         }
 
-        // Replace basic water tiles with variants
-        foreach (var region in baseMapManager.LakeRegions)
+        if (waterTileVariants != null && waterTileVariants.Length > 0)
         {
-            EnhanceWaterRegion(region);
+            foreach (var region in baseMapManager.LakeRegions)
+            {
+                if (IsRegionInMyBiome(region.Center))
+                    EnhanceWaterRegion(region);
+            }
         }
 
-        // Enhance house regions last to ensure they override other grass
-        foreach (var region in baseMapManager.HouseRegions)
+        // Hausregionen nur bearbeiten, wenn darkGrassTiles gesetzt sind (z.B. für das Gras-Biom)
+        if (darkGrassTiles != null && darkGrassTiles.Length > 0)
         {
-            EnhanceHouseRegion(region);
+            foreach (var region in baseMapManager.HouseRegions)
+            {
+                if (IsRegionInMyBiome(region.Center))
+                    EnhanceHouseRegion(region);
+            }
         }
 
-        Debug.Log("TileManager: Terrain enhancement completed");
+        Debug.Log($"TileManager ({this.name}): Terrain enhancement for assigned biome completed");
+    }
+
+    // Prüft, ob eine Region im Bereich dieses TileManagers liegt
+    private bool IsRegionInMyBiome(Vector3 regionCenter)
+    {
+        var cell = baseMapManager.baseLayer.WorldToCell(regionCenter);
+        return cell.x >= origin.x && cell.x < origin.x + biomeSize.x &&
+               cell.y >= origin.y && cell.y < origin.y + biomeSize.y;
     }
 
     private void EnhanceEarthRegion(Map.EarthRegion region)

@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 082029f1e986846c6a6872ddd983af3d, type: 3}
+  m_Name: BiomeStandard
+  m_EditorClassIdentifier: 
+  mapWidth: 100
+  mapHeight: 100
+  noiseScale: 10
+  useRandomSeed: 1
+  seed: 0
+  grassThreshold: 0.4
+  waterThreshold: 0.3
+  minRegionSize: 4
+  earthTile: {fileID: 11400000, guid: 14e78bdfa03a74993aec8575f7021878, type: 2}
+  grassTile: {fileID: 11400000, guid: e79b9f881982047d09aee03e9ec059f5, type: 2}
+  waterTile: {fileID: 11400000, guid: bc8d9a700458e5043af201bcc68584e9, type: 2}
+  darkEarthTiles:
+  - {fileID: 11400000, guid: 5e76936474c7b4da890843f7c3fa5bae, type: 2}
+  - {fileID: 11400000, guid: 7e3f608f7362f4793b57aef1cd4ce301, type: 2}
+  - {fileID: 11400000, guid: c73762efaeaed448796a52689bbf0cab, type: 2}
+  - {fileID: 11400000, guid: cf71dcee64ac34b809f9c328a9143a4b, type: 2}
+  mediumEarthTiles:
+  - {fileID: 11400000, guid: ee6c343d0cfde45be9bfac43bb2415d6, type: 2}
+  - {fileID: 11400000, guid: 96fd62846450c485dbebfc7e7ec4a520, type: 2}
+  - {fileID: 11400000, guid: 1d9a3e037ca764ca88a93ecf5b25c4cc, type: 2}
+  - {fileID: 11400000, guid: 010b2b1e023df408fb82020b131fd32e, type: 2}
+  lightEarthTiles:
+  - {fileID: 11400000, guid: 7b99d32b8ab7d4b0a9d8eb3b56a31168, type: 2}
+  - {fileID: 11400000, guid: 2f93f662f17184f148eb2ec2bef6ada2, type: 2}
+  - {fileID: 11400000, guid: daa9b2a93b38b463dbfdd2a28a2cc301, type: 2}
+  - {fileID: 11400000, guid: 33f701229fedd4267bc33e673fec4c4c, type: 2}
+  lightGrassTiles:
+  - {fileID: 11400000, guid: d36c8f0ece44a447ebbea7869653de22, type: 2}
+  - {fileID: 11400000, guid: 0319ee565f5e44f51b4fe1ad2c39a3e2, type: 2}
+  - {fileID: 11400000, guid: d4585a6d162ee409996d27cd1aeb4e73, type: 2}
+  - {fileID: 11400000, guid: 366718e4b131a4e2d8529bf324d4c512, type: 2}
+  mediumGrassTiles:
+  - {fileID: 11400000, guid: cb621a5a54161481a9da5f3b3fb8a3b6, type: 2}
+  - {fileID: 11400000, guid: 0415a8bb3186e488c923c8468b43a12e, type: 2}
+  - {fileID: 11400000, guid: 804190d1c37b54007ac7e9ac0651fe20, type: 2}
+  - {fileID: 11400000, guid: 76910416caeb14e3aa1bd41902964ccb, type: 2}
+  darkGrassTiles:
+  - {fileID: 11400000, guid: cf549ee55ce1a411fa8196fc3abe2e89, type: 2}
+  - {fileID: 11400000, guid: 5501b47258f9d499887164ee7cd5bf5c, type: 2}
+  - {fileID: 11400000, guid: 12406dc1d6d72472c80764328b1f6cd9, type: 2}
+  - {fileID: 11400000, guid: 7f4fe2131ac864ee5989c317d140bd86, type: 2}
+  waterTileVariants:
+  - {fileID: 11400000, guid: bc8d9a700458e5043af201bcc68584e9, type: 2}
+  roadTile: {fileID: 11400000, guid: 5eda2f0150dd1364caec3d50deaff2ea, type: 2}
+  treePrefabs:
+  - {fileID: 8082689388017433024, guid: bd00ad35c541eaa44874dde41f3bea90, type: 3}
+  - {fileID: 8082689388017433024, guid: 181d619f05119f249bd1b8f9199cc4dc, type: 3}
+  highGrassPrefab: {fileID: 4003188186672061309, guid: 0708048d1a8567642a32d720914f4320, type: 3}
+  lowGrassPrefab: {fileID: 7855908118402871436, guid: 142ebffa6672cc54a933010c945059ef, type: 3}
+  housePrefabs:
+  - {fileID: 919132149155446097, guid: 92744fe4ba2484eefa4f921a692c8ba2, type: 3}
+  treeDensity: 0.019
+  minTreeDistance: 4
+  minTreeRoadDistance: 5
+  highGrassRadius: 5
+  lowGrassRadius: 8
+  highGrassDensity: 0.123
+  lowGrassDensity: 0.077
+  lakeTreeChance: 0.019
+  lakeEffectRadius: 8
+  lakeHighGrassChance: 0.206
+  lakeLowGrassChance: 0.065
+  roadGrassRadius: 2
+  roadGrassChance: 0.052
+  roadHighGrassRatio: 0.071
+  housesPerRegion: 2
+  minHouseDistance: 9
+  sortingLayerName: Props
+  treeSortingOrder: 3
+  houseSortingOrder: 2
+  highGrassSortingOrder: 1
+  lowGrassSortingOrder: 0
+  maxEarthSteps: 25
+  earthPenalty: 5

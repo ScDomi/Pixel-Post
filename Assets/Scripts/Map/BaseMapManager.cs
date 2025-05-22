@@ -8,12 +8,11 @@ using Map;
 
 public class BaseMapManager : MonoBehaviour
 {
+    [HideInInspector] public Vector2Int origin;
+    [HideInInspector] public Vector2Int biomeSize;
+
     [Header("Required References")]
     public ObjectManager objectManager;   // Reference to ObjectManager
-
-    [Header("Map Size")]
-    public int mapWidth = 100;
-    public int mapHeight = 100;
 
     [Header("Noise Settings")]
     public float noiseScale = 10f;
@@ -87,51 +86,35 @@ public class BaseMapManager : MonoBehaviour
 
     private void FillBaseLayer()
     {
-        for (int x = 0; x < mapWidth; x++)
+        for (int x = 0; x < biomeSize.x; x++)
+        for (int y = 0; y < biomeSize.y; y++)
         {
-            for (int y = 0; y < mapHeight; y++)
-            {
-                baseLayer.SetTile(new Vector3Int(x, y, 0), earthTile);
-            }
+            var cell = new Vector3Int(origin.x + x, origin.y + y, 0);
+            baseLayer.SetTile(cell, earthTile);
         }
     }
 
     private void GenerateGrassLayer()
     {
-        for (int x = 0; x < mapWidth; x++)
+        for (int x = 0; x < biomeSize.x; x++)
+        for (int y = 0; y < biomeSize.y; y++)
         {
-            for (int y = 0; y < mapHeight; y++)
-            {
-                float nx = (x + xOffset) / (float)mapWidth * noiseScale;
-                float ny = (y + yOffset) / (float)mapHeight * noiseScale;
-                float noise = Mathf.PerlinNoise(nx, ny);
-
-                if (noise > grassThreshold)
-                {
-                    grassLayer.SetTile(new Vector3Int(x, y, 0), grassTile);
-                }
-            }
+            float nx = (x + origin.x) / (float)biomeSize.x * noiseScale;
+            float ny = (y + origin.y) / (float)biomeSize.y * noiseScale;
+            if (Mathf.PerlinNoise(nx, ny) > grassThreshold)
+                grassLayer.SetTile(new Vector3Int(origin.x + x, origin.y + y, 0), grassTile);
         }
     }
 
     private void GenerateWaterLayer()
     {
-        float waterXOffset = xOffset + 1000f;
-        float waterYOffset = yOffset + 1000f;
-
-        for (int x = 0; x < mapWidth; x++)
+        for (int x = 0; x < biomeSize.x; x++)
+        for (int y = 0; y < biomeSize.y; y++)
         {
-            for (int y = 0; y < mapHeight; y++)
-            {
-                float nx = (x + waterXOffset) / (float)mapWidth * noiseScale;
-                float ny = (y + waterYOffset) / (float)mapHeight * noiseScale;
-                float noise = Mathf.PerlinNoise(nx, ny);
-
-                if (noise < waterThreshold)
-                {
-                    waterLayer.SetTile(new Vector3Int(x, y, 0), waterTile);
-                }
-            }
+            float nx = (x + origin.x + 1000f) / biomeSize.x * noiseScale;
+            float ny = (y + origin.y + 1000f) / biomeSize.y * noiseScale;
+            if (Mathf.PerlinNoise(nx, ny) < waterThreshold)
+                waterLayer.SetTile(new Vector3Int(origin.x + x, origin.y + y, 0), waterTile);
         }
     }
 

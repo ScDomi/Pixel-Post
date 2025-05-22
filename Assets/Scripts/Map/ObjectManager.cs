@@ -7,6 +7,9 @@ using Map;
 
 public class ObjectManager : MonoBehaviour
 {
+    [HideInInspector] public Vector2Int origin;
+    [HideInInspector] public Vector2Int biomeSize;
+
     [Header("Required References")]
     public BaseMapManager baseMapManager;
     
@@ -47,7 +50,6 @@ public class ObjectManager : MonoBehaviour
     public float roadHighGrassRatio = 0.4f;
 
     [Header("House Settings")]
-    public int housesPerRegion = 2;
     public float minHouseDistance = 5f;
     
     [Header("Sorting Settings")]
@@ -76,17 +78,17 @@ public class ObjectManager : MonoBehaviour
         
         foreach (var pos in bounds.allPositionsWithin)
         {
+            if (pos.x < origin.x || pos.y < origin.y) continue;
+            if (pos.x >= origin.x + biomeSize.x || pos.y >= origin.y + biomeSize.y) continue;
             if (IsValidHousePosition(baseMapManager.grassLayer.CellToWorld(pos)))
-            {
                 candidates.Add(pos);
-            }
         }
         
         // Shuffle candidates for random placement
         candidates = candidates.OrderBy(x => Random.value).ToList();
         
         // Try to place houses
-        int totalHouses = Mathf.Min(20, candidates.Count / 4); // Maximum 20 houses, or fewer if not enough space
+        int totalHouses = Mathf.Min(5, candidates.Count / 4); // Maximum 20 houses, or fewer if not enough space
         int housesPlaced = 0;
         
         foreach (var cell in candidates)
@@ -104,9 +106,17 @@ public class ObjectManager : MonoBehaviour
 
     public void PlaceRemainingObjects()
     {
+        // Stelle sicher, dass alle Platzierungen nur im eigenen Biome-Bereich erfolgen
         PlaceForestVegetation();
         PlaceLakeVegetation();
         PlaceRoadVegetation();
+    }
+
+    private bool IsInBiomeBounds(Vector3 worldPos)
+    {
+        var cell = baseMapManager.baseLayer.WorldToCell(worldPos);
+        return cell.x >= origin.x && cell.x < origin.x + biomeSize.x &&
+               cell.y >= origin.y && cell.y < origin.y + biomeSize.y;
     }
 
     private bool IsValidHousePosition(Vector3 worldPos)
@@ -267,6 +277,8 @@ public class ObjectManager : MonoBehaviour
 
     private void PlaceGrassInRadius(Vector3 center, float radius, float density, bool isHighGrass)
     {
+        if (!IsInBiomeBounds(center)) return;
+
         for (float angle = 0; angle < 360; angle += 15)
         {
             float rad = angle * Mathf.Deg2Rad;
@@ -282,13 +294,15 @@ public class ObjectManager : MonoBehaviour
         }
     }
 
-    private void PlaceTree(Vector3 position)
+    private void PlaceTree(Vector3 worldPos)
     {
+        if (!IsInBiomeBounds(worldPos)) return;
+
         var prefab = treePrefabs[Random.Range(0, treePrefabs.Length)];
         // Erst -90° um Y, dann 90° um Z, dann random um X
         float randomX = Random.Range(0, 360);
         var rotation = Quaternion.Euler(randomX, -90f, 90f);
-        var tree = Instantiate(prefab, position, rotation, objectContainer);
+        var tree = Instantiate(prefab, worldPos, rotation, objectContainer);
 
         var sg = tree.AddComponent<SortingGroup>();
         sg.sortingLayerName = sortingLayerName;
@@ -297,18 +311,20 @@ public class ObjectManager : MonoBehaviour
         float scale = Random.Range(0.9f, 1.1f);
         tree.transform.localScale *= scale;
 
-        placedObjects.Add(position);
+        placedObjects.Add(worldPos);
     }
 
-    private void PlaceGrass(Vector3 position, bool isHighGrass)
+    private void PlaceGrass(Vector3 worldPos, bool isHighGrass)
     {
-        if (placedObjects.Any(p => Vector2.Distance(p, position) < minTreeDistance * 0.5f))
+        if (!IsInBiomeBounds(worldPos)) return;
+
+        if (placedObjects.Any(p => Vector2.Distance(p, worldPos) < minTreeDistance * 0.5f))
             return;
         var prefab = isHighGrass ? highGrassPrefab : lowGrassPrefab;
         // Erst -90° um Y, dann 90° um Z, dann random um X
         float randomX = Random.Range(0, 360);
         var rotation = Quaternion.Euler(randomX, -90f, 90f);
-        var grass = Instantiate(prefab, position, rotation, objectContainer);
+        var grass = Instantiate(prefab, worldPos, rotation, objectContainer);
 
         var sg = grass.AddComponent<SortingGroup>();
         sg.sortingLayerName = sortingLayerName;
@@ -317,7 +333,7 @@ public class ObjectManager : MonoBehaviour
         float scale = Random.Range(0.8f, 1.2f);
         grass.transform.localScale *= scale;
 
-        placedObjects.Add(position);
+        placedObjects.Add(worldPos);
     }
 private bool IsValidPosition(Vector3 worldPos, bool isTree = false)
 {
